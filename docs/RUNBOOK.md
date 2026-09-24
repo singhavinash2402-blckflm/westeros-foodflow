@@ -8,107 +8,140 @@ The document will evolve as new technologies and pipeline components are introdu
 
 ---
 
-# 2. Local Development Environment
+## 2. Local Development Environment
 
-## Workspace
+### Workspace
 
+```text
 C:\Work\westeros_foodflow_workspace
+```
 
-## Python Environment
+### Python Environment
 
+```text
 .venv\
+```
 
 Activate the environment from PowerShell:
 
+```powershell
 .venv\Scripts\Activate.ps1
+```
 
 Expected prompt:
 
+```text
 (.venv) PS C:\Work\westeros_foodflow_workspace>
+```
 
 Verify Python:
 
+```powershell
 python --version
+```
 
 Verify the active interpreter:
 
+```powershell
 where.exe python
+```
 
 Expected first result:
 
+```text
 C:\Work\westeros_foodflow_workspace\.venv\Scripts\python.exe
+```
 
 Verify pip:
 
+```powershell
 python -m pip --version
+```
 
 ---
 
-# 3. Git Operations
+## 3. Git Operations
 
 Check repository status:
 
+```bash
 git status
+```
 
 View repository history:
 
+```bash
 git log --oneline
+```
 
 View changes:
 
+```bash
 git diff
+```
 
 Stage changes:
 
+```bash
 git add .
+```
 
 Create a commit:
 
+```bash
 git commit -m "descriptive message"
+```
 
 Review recent commits:
 
+```bash
 git log --oneline --decorate
+```
 
 ---
 
-# 4. Git Safety Rules
+## 4. Git Safety Rules
 
 Never commit:
 
-* Passwords
-* API keys
-* Access tokens
-* Cloud credentials
-* Private keys
-* Connection strings containing credentials
-* `.env` files
-* `.venv`
-* Generated caches
+- Passwords
+- API keys
+- Access tokens
+- Cloud credentials
+- Private keys
+- Connection strings containing credentials
+- `.env` files
+- `.venv`
+- Generated caches
 
 Before committing:
 
+```bash
 git status
+```
 
 Review staged files:
 
+```bash
 git diff --cached
+```
 
 ---
 
-# 5. Databricks Workflow
+## 5. Databricks Workflow
 
 Current environment:
 
-Databricks Free Edition
+- Databricks Free Edition
 
 Current storage approach:
 
-Databricks-managed storage
-Databricks-managed volume
+- Databricks-managed storage
+- Databricks-managed volume
 
 Current processing pattern:
 
+```text
 Source File
     ↓
 Bronze
@@ -116,28 +149,34 @@ Bronze
 Silver
     ↓
 Gold
+```
 
 ---
 
-# 6. Current Incremental Processing Workflow
+## 6. Current Incremental Processing Workflow
 
 The next implementation uses:
 
+```text
 restaurants_20262309_02.csv
+```
 
 Expected test scenarios:
 
-* New restaurant records
-* Updated restaurant records
-* Duplicate records
+- New restaurant records
+- Updated restaurant records
+- Duplicate records
 
 Known update test:
 
+```text
 REST-DXB-001
 rating: 4.9 → 4.7
+```
 
 Expected processing:
 
+```text
 Incoming Batch
       ↓
 Bronze
@@ -155,10 +194,11 @@ Gold
 Validate Results
       ↓
 Inspect Delta History
+```
 
 ---
 
-# 7. Incremental Validation Checklist
+## 7. Incremental Validation Checklist
 
 After an incremental load, validate:
 
@@ -190,10 +230,11 @@ Inspect the Delta table history to understand the operations performed.
 
 ---
 
-# 8. Future Azure Workflow
+## 8. Future Azure Workflow
 
 When ADLS Gen2 is introduced:
 
+```text
 Source
   ↓
 ADLS Gen2
@@ -207,6 +248,7 @@ Bronze
 Silver
   ↓
 Gold
+```
 
 Authentication and authorization will use appropriate Azure identity and access-control mechanisms.
 
@@ -214,7 +256,7 @@ Credentials must never be embedded in notebooks or committed to Git.
 
 ---
 
-# 9. Future AWS Workflow
+## 9. Future AWS Workflow
 
 The planned AWS ingestion path is:
 
