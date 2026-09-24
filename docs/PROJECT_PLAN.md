@@ -14,37 +14,37 @@ The goal is not only to build the platform, but to understand the engineering co
 
 FoodFlow will provide practical experience with:
 
-* Python
-* SQL
-* PySpark
-* Databricks
-* Delta Lake
-* Unity Catalog
-* Medallion Architecture
-* Incremental processing
-* MERGE and upsert patterns
-* Data quality
-* Data contracts
-* Schema evolution
-* Azure Data Factory
-* Azure Data Lake Storage Gen2
-* SQL Server / Azure SQL
-* CDC
-* REST APIs and JSON
-* AWS S3
-* dbt
-* Dimensional modeling
-* Streaming
-* Airflow
-* Testing
-* Performance optimization
-* Security and IAM
-* Terraform
-* Git and GitHub
-* CI/CD
-* Power BI
-* AI-assisted data engineering
-* Agentic AI for data engineering operations
+- Python
+- SQL
+- PySpark
+- Databricks
+- Delta Lake
+- Unity Catalog
+- Medallion Architecture
+- Incremental processing
+- `MERGE` and upsert patterns
+- Data quality
+- Data contracts
+- Schema evolution
+- Azure Data Factory
+- Azure Data Lake Storage Gen2
+- SQL Server / Azure SQL
+- CDC
+- REST APIs and JSON
+- AWS S3
+- dbt
+- Dimensional modeling
+- Streaming
+- Airflow
+- Testing
+- Performance optimization
+- Security and IAM
+- Terraform
+- Git and GitHub
+- CI/CD
+- Power BI
+- AI-assisted data engineering
+- Agentic AI for data engineering operations
 
 ---
 
@@ -52,6 +52,7 @@ FoodFlow will provide practical experience with:
 
 The long-term FoodFlow architecture will include:
 
+```text
                          FOODFLOW
                             |
        +--------------------+--------------------+
@@ -88,26 +89,27 @@ The long-term FoodFlow architecture will include:
                     +-------+-------+
                     |               |
                  Power BI       Analytics
+```
 
 Cross-cutting capabilities:
 
-* Unity Catalog
-* Data quality
-* Data contracts
-* Schema evolution
-* Idempotency
-* Lineage
-* Observability
-* Testing
-* Security
-* IAM/RBAC
-* Secrets management
-* Performance optimization
-* Cost optimization
-* Terraform
-* Git
-* CI/CD
-* AI automation
+- Unity Catalog
+- Data quality
+- Data contracts
+- Schema evolution
+- Idempotency
+- Lineage
+- Observability
+- Testing
+- Security
+- IAM/RBAC
+- Secrets management
+- Performance optimization
+- Cost optimization
+- Terraform
+- Git
+- CI/CD
+- AI automation
 
 ---
 
@@ -132,12 +134,12 @@ AI-generated code must be reviewed, tested, and understood before being incorpor
 
 The initial implementation uses:
 
-* Databricks Free Edition
-* Unity Catalog
-* Databricks-managed storage
-* Managed volumes
-* Delta Lake
-* PySpark
+- Databricks Free Edition
+- Unity Catalog
+- Databricks-managed storage
+- Managed volumes
+- Delta Lake
+- PySpark
 
 Azure ADLS Gen2 integration is intentionally deferred until the appropriate Azure Databricks environment is available.
 
@@ -147,117 +149,117 @@ Azure ADLS Gen2 integration is intentionally deferred until the appropriate Azur
 
 ### Phase 1 — Databricks Foundation
 
-* Unity Catalog
-* Catalogs and schemas
-* Managed volumes
-* Raw CSV ingestion
-* Bronze Delta
-* Silver Delta
-* Gold Delta
-* Data quality
-* Delta history
-* Execution plan analysis
+- Unity Catalog
+- Catalogs and schemas
+- Managed volumes
+- Raw CSV ingestion
+- Bronze Delta
+- Silver Delta
+- Gold Delta
+- Data quality
+- Delta history
+- Execution plan analysis
 
 ### Phase 2 — Incremental Processing
 
-* Multiple source files
-* New records
-* Updated records
-* Duplicate records
-* Deduplication
-* Business keys
-* Delta MERGE
-* Idempotency
-* Batch identifiers
-* Audit columns
-* Validation
+- Multiple source files
+- New records
+- Updated records
+- Duplicate records
+- Deduplication
+- Business keys
+- Delta `MERGE`
+- Idempotency
+- Batch identifiers
+- Audit columns
+- Validation
 
 ### Phase 3 — Relational Sources
 
-* SQL Server / Azure SQL
-* Full loads
-* Watermark-based incremental ingestion
-* Source metadata
-* Incremental extraction
+- SQL Server / Azure SQL
+- Full loads
+- Watermark-based incremental ingestion
+- Source metadata
+- Incremental extraction
 
 ### Phase 4 — Azure Data Factory
 
-* Linked services
-* Datasets
-* Pipelines
-* Parameters
-* Variables
-* Copy Activity
-* Lookup
-* ForEach
-* Metadata-driven pipelines
-* Triggers
-* Retry handling
-* Monitoring
-* Databricks orchestration
+- Linked services
+- Datasets
+- Pipelines
+- Parameters
+- Variables
+- Copy Activity
+- Lookup
+- ForEach
+- Metadata-driven pipelines
+- Triggers
+- Retry handling
+- Monitoring
+- Databricks orchestration
 
 ### Phase 5 — CDC
 
-* Inserts
-* Updates
-* Deletes
-* CDC versus watermarking
-* CDC ingestion
-* Delta MERGE
+- Inserts
+- Updates
+- Deletes
+- CDC versus watermarking
+- CDC ingestion
+- Delta `MERGE`
 
 ### Phase 6 — Azure Data Lake
 
-* ADLS Gen2
-* Hierarchical namespace
-* RBAC
-* Managed identity
-* Secure Databricks access
+- ADLS Gen2
+- Hierarchical namespace
+- RBAC
+- Managed identity
+- Secure Databricks access
 
 ### Phase 7 — APIs and JSON
 
-* REST APIs
-* Authentication
-* Pagination
-* Rate limits
-* Nested JSON
-* Schema evolution
-* Incremental API ingestion
+- REST APIs
+- Authentication
+- Pagination
+- Rate limits
+- Nested JSON
+- Schema evolution
+- Incremental API ingestion
 
 ### Phase 8 — AWS and Multi-Cloud
 
-* Amazon S3
-* IAM
-* Cross-cloud access
-* S3 ingestion
-* ADLS ingestion
-* Multi-cloud architecture
+- Amazon S3
+- IAM
+- Cross-cloud access
+- S3 ingestion
+- ADLS ingestion
+- Multi-cloud architecture
 
 ### Phase 9 — dbt and Dimensional Modeling
 
-* dbt models
-* Tests
-* Documentation
-* Lineage
-* Incremental models
-* Facts
-* Dimensions
-* Star schema
-* SCD Type 1
-* SCD Type 2
+- dbt models
+- Tests
+- Documentation
+- Lineage
+- Incremental models
+- Facts
+- Dimensions
+- Star schema
+- SCD Type 1
+- SCD Type 2
 
 ### Phase 10 — Streaming
 
-* Event Hubs
-* Structured Streaming
-* Streaming Bronze/Silver/Gold
-* Kafka concepts
-* Event time
-* Processing time
-* Watermarks
-* Late data
-* Stateful processing
-* Checkpoints
-* Deduplication
+- Event Hubs
+- Structured Streaming
+- Streaming Bronze/Silver/Gold
+- Kafka concepts
+- Event time
+- Processing time
+- Watermarks
+- Late data
+- Stateful processing
+- Checkpoints
+- Deduplication
 
 ### Phase 11 — Airflow
 

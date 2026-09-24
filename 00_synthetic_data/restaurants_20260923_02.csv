@@ -1,0 +1,5 @@
+restaurant_id,restaurant_name,city,state,country,address,cuisine,opening_date,phone,rating
+REST-DXB-001,Spice Route Marina,Dubai,Dubai,UAE,Dubai Marina Walk,North Indian,2023-03-10,7144567890,4.7
+REST-HYD-001,Hyderabad Spice House,Hyderabad,Telangana,India,Banjara Hills Hyderabad,Hyderabadi,2024-04-15,9123456789,4.6
+REST-DEL-001,Spice Route,Delhi,Delhi,India,Ajanra Road Delhi,North Indian,2022-01-15,9487345678,4.5
+REST-DXB-001,Spice Route Marina,Dubai,Dubai,UAE,Dubai Marina Walk,North Indian,2023-03-10,7144567890,4.7

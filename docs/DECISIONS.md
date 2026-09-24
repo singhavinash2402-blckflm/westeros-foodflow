@@ -1,167 +1,185 @@
-# FoodFlow — Architecture Decisions
-
-This document records important technical and architectural decisions made during the FoodFlow project.
-
-The purpose is to preserve the reasoning behind decisions so they can be revisited when the architecture evolves.
-
----
+# FoodFlow Engineering Decisions
 
 ## Decision 001 — Use Databricks Free Edition for Initial Learning
 
-**Date:** 2026-09-24
-
 **Status:** Accepted
 
-### Context
+Databricks Free Edition is used for the initial FoodFlow implementation.
 
-The initial objective is to learn Databricks, Unity Catalog, Delta Lake, PySpark, Medallion architecture, data quality, and incremental processing through hands-on exercises.
-
-### Decision
-
-Use Databricks Free Edition for the initial implementation.
-
-### Reason
-
-It provides an accessible environment for learning the core Databricks and Delta concepts without immediately introducing additional cloud infrastructure.
-
-### Consequence
-
-Some production Azure capabilities will not be available or appropriate in the current environment and will be introduced later.
+Azure ADLS integration is deferred until the project reaches the appropriate Azure infrastructure phase.
 
 ---
 
-## Decision 002 — Use Databricks-Managed Storage During the Initial Phase
-
-**Date:** 2026-09-24
+## Decision 002 — Use Databricks-Managed Storage Initially
 
 **Status:** Accepted
 
-### Context
+Initial Bronze, Silver, and Gold Delta tables use Databricks-managed storage and managed volumes.
 
-The project initially attempted to work with Azure ADLS authentication from the current Databricks Free Edition environment.
-
-The environment encountered authentication/configuration limitations, including authorization failures.
-
-### Decision
-
-Use Databricks-managed storage and managed volumes for the current learning phase.
-
-### Reason
-
-This allows the project to continue learning:
-
-* File ingestion
-* Delta Lake
-* Unity Catalog
-* Medallion architecture
-* Incremental processing
-* MERGE
-* Data quality
-
-without blocking progress on external storage authentication.
-
-### Consequence
-
-The current implementation is not yet representative of the final ADLS-based production architecture.
-
-### Future
-
-ADLS Gen2 will be introduced when the appropriate Azure Databricks environment and authentication model are available.
+External ADLS and AWS S3 storage will be introduced later as part of the multi-cloud architecture.
 
 ---
 
-## Decision 003 — Use Project-Local Python Virtual Environment
-
-**Date:** 2026-09-24
+## Decision 003 — Use a Project-local Python Virtual Environment
 
 **Status:** Accepted
 
-### Context
+Python dependencies are isolated in the project-local `.venv`.
 
-FoodFlow will eventually use multiple Python-based tools and frameworks.
-
-### Decision
-
-Maintain a `.venv` inside the FoodFlow workspace.
-
-westeros_foodflow_workspace/
-└── .venv/
-
-### Reason
-
-Project-local environments provide dependency isolation and make the project easier to reproduce.
-
-### Consequence
-
-`.venv/` must never be committed to Git.
+This keeps the FoodFlow development environment reproducible and prevents global package conflicts.
 
 ---
 
-## Decision 004 — Use GitHub as Project Source of Truth
-
-**Date:** 2026-09-24
+## Decision 004 — GitHub Is the Project Source of Truth
 
 **Status:** Accepted
 
-### Context
+Project code, documentation, synthetic test data, and development artifacts are version controlled in Git and pushed to GitHub.
 
-FoodFlow is a long-running learning and engineering project.
-
-The project will evolve across many technologies and development phases.
-
-### Decision
-
-Use Git and GitHub to maintain the project source code, documentation, architecture decisions, learning history, tests, and configuration templates.
-
-### Reason
-
-Git provides:
-
-* Version history
-* Change tracking
-* Rollback
-* Collaboration
-* Backup
-* Project evolution history
-
-GitHub provides remote persistence so the project does not depend on a single local machine.
-
-### Consequence
-
-Secrets must never be committed.
+The repository is the backup and source of truth for the learning project.
 
 ---
 
-## Decision 005 — Learn Manually Before Automating With AI
-
-**Date:** 2026-09-24
+## Decision 005 — Learn Manually Before Automating with AI
 
 **Status:** Accepted
 
-### Context
+Core data-engineering concepts will first be implemented manually.
 
-FoodFlow will eventually include AI-assisted engineering and agentic AI.
+AI tools and agents will later be introduced to automate repetitive work, generate boilerplate, and assist with diagnosis and documentation.
 
-### Decision
+Generated code must still be reviewed and tested.
 
-Understand and manually implement important engineering concepts before using AI to automate them.
+---
 
-### Reason
+## Decision 006 — Use Delta `MERGE` for Incremental Silver Updates
 
-The project is intended to develop engineering understanding rather than simply generate working code.
+**Status:** Accepted
 
-### Approach
+Silver is treated as current-state row-level data.
 
-Understand
-    ↓
-Implement manually
-    ↓
-Test
-    ↓
-Document
-    ↓
-Automate
-    ↓
-Use AI assistance
+The business key is:
 
-AI-generated code must be reviewed and tested before being incorporated.
+```text
+restaurant_id
+```
+
+Incoming records are deduplicated before the `MERGE`.
+
+The `MERGE`:
+
+- updates existing rows when business attributes change
+- inserts new rows
+- leaves unchanged rows untouched
+
+Null-safe comparisons using `<=>` are used to avoid incorrect change detection when nullable fields are involved.
+
+---
+
+## Decision 007 — `_batch_id` Represents the Last Modifying Batch
+
+**Status:** Accepted
+
+The current `_batch_id` design identifies the batch that last modified the current Silver row.
+
+It is not a first-ingestion identifier.
+
+Historical rows were migrated with:
+
+```text
+20260923_01
+```
+
+while the incremental batch used:
+
+```text
+20260924_02
+```
+
+If first-ingestion lineage is required later, a separate field will be introduced.
+
+---
+
+## Decision 008 — Historical Metadata Is Migrated with a Scoped Backfill
+
+**Status:** Accepted
+
+Historical `_batch_id` values were populated through a controlled migration/backfill rather than treating the operation as a new ingestion batch.
+
+The migration was restricted to rows where:
+
+```text
+_batch_id IS NULL
+```
+
+and:
+
+```text
+_source_file = 'restaurants_20262309_01.csv'
+```
+
+This prevented later incremental records from being modified.
+
+The migration was validated after execution.
+
+---
+
+## Decision 009 — Recompute Gold Aggregates from Current Silver State
+
+**Status:** Accepted
+
+Gold aggregate tables are derived state.
+
+For the current FoodFlow design, Gold is recomputed and overwritten from Silver after incremental changes.
+
+Silver uses `MERGE` because it represents current row-level entities.
+
+Gold is recomputed because it represents an aggregate projection of Silver.
+
+---
+
+## Decision 010 — Use Date-based Synthetic File Naming
+
+**Status:** Accepted
+
+New local synthetic source files use:
+
+```text
+YYYYMMDD_<file-sequence-of-day>.csv
+```
+
+Example:
+
+```text
+restaurants_20260923_01.csv
+restaurants_20260923_02.csv
+```
+
+Existing Databricks historical filenames are not renamed because they are already part of the executed lineage.
+
+---
+
+## Decision 011 — Python Notebook Source Is the Primary Databricks Artifact
+
+**Status:** Accepted
+
+Databricks notebooks are exported as Python source for Git version control.
+
+Python source is the primary editable and reviewable artifact.
+
+DBC exports are retained as Databricks-native backup/import artifacts.
+
+Current structure:
+
+```text
+notebooks/
+└── dev/
+    └── 01_Bronze/
+
+artifacts/
+└── databricks/
+    └── dev/
+        └── 01_Bronze/
+```
+
+The Python notebook and the corresponding DBC backup are maintained together for important Databricks development work.

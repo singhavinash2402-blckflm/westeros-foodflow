@@ -8,6 +8,7 @@ The initial implementation is being developed in Databricks Free Edition. Cloud-
 
 The target architecture is:
 
+```text
                          FOODFLOW
                             |
        +--------------------+--------------------+
@@ -44,6 +45,7 @@ The target architecture is:
                   +---------+---------+
                   |                   |
                Power BI           Analytics
+```
 
 ---
 
@@ -51,6 +53,7 @@ The target architecture is:
 
 The current hands-on implementation is intentionally smaller:
 
+```text
 CSV Files
     |
     v
@@ -67,17 +70,18 @@ Gold Delta
     |
     v
 Analytics / Validation
+```
 
 Current platform components:
 
-* Databricks Free Edition
-* Unity Catalog
-* FoodFlow catalog
-* FoodFlow schemas
-* Databricks-managed volume
-* Delta Lake
-* PySpark
-* Managed Delta tables
+- Databricks Free Edition
+- Unity Catalog
+- FoodFlow catalog
+- FoodFlow schemas
+- Databricks-managed volume
+- Delta Lake
+- PySpark
+- Managed Delta tables
 
 ---
 
@@ -89,14 +93,14 @@ Bronze represents the raw ingestion layer.
 
 Responsibilities:
 
-* Preserve source data
-* Maintain source-level structure
-* Support replay/reprocessing
-* Provide an ingestion boundary
+- Preserve source data
+- Maintain source-level structure
+- Support replay/reprocessing
+- Provide an ingestion boundary
 
 Current source:
 
-CSV files
+- CSV files
 
 ---
 
@@ -106,12 +110,12 @@ Silver represents the cleaned and standardized layer.
 
 Responsibilities:
 
-* Data type normalization
-* Data cleaning
-* Validation
-* Deduplication where appropriate
-* Business-rule transformations
-* Standardized schema
+- Data type normalization
+- Data cleaning
+- Validation
+- Deduplication where appropriate
+- Business-rule transformations
+- Standardized schema
 
 ---
 
@@ -121,10 +125,10 @@ Gold represents business-ready analytical data.
 
 Responsibilities:
 
-* Aggregations
-* Business metrics
-* Analytical datasets
-* Reporting-ready structures
+- Aggregations
+- Business metrics
+- Analytical datasets
+- Reporting-ready structures
 
 ---
 
@@ -132,6 +136,7 @@ Responsibilities:
 
 Unity Catalog provides the governance hierarchy:
 
+```text
 Catalog
   |
   +-- Schema
@@ -139,6 +144,7 @@ Catalog
        +-- Tables
        |
        +-- Volumes
+```
 
 FoodFlow uses a dedicated catalog and schemas to keep the project logically isolated.
 
@@ -148,6 +154,7 @@ FoodFlow uses a dedicated catalog and schemas to keep the project logically isol
 
 The next implementation will extend the current architecture:
 
+```text
 CSV Batch 1
      |
      v
@@ -175,16 +182,17 @@ Silver
      |
      v
 Gold
+```
 
 The second batch will contain:
 
-* New records
-* Updated records
-* Duplicate records
+- New records
+- Updated records
+- Duplicate records
 
 The business key will be used to identify existing entities.
 
-Delta MERGE will be used to apply inserts and updates.
+Delta `MERGE` will be used to apply inserts and updates.
 
 ---
 
@@ -192,6 +200,7 @@ Delta MERGE will be used to apply inserts and updates.
 
 The planned cloud architecture is:
 
+```text
 Sources
    |
    +-- CSV
@@ -227,6 +236,7 @@ Serving
    |
    +-- Power BI
    +-- Analytics
+```
 
 ---
 
@@ -234,10 +244,12 @@ Serving
 
 The planned streaming architecture is:
 
+```text
 Event Producer
       |
       v
 Event Hubs / Kafka
+```
       |
       v
 Databricks Structured Streaming
