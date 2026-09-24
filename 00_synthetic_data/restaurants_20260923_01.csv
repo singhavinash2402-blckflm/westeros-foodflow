@@ -1,0 +1,11 @@
+restaurant_id,restaurant_name,city,state,country,address,cuisine,opening_date,phone,rating
+REST-DEL-001,Spice Route,Delhi,Delhi,India,Ajanra Road Delhi,North Indian,1/15/2022,9487345678,4.5
+REST-MUM-001,Curry House,Mumbai,Maharashtra,India,Panwel Mumbai,Indian,6/20/2021,7322345678,4.2
+REST-BNG-001,Dosa Corner,Bengaluru,Karnataka,India,MG Road Bengaluru,South Indian,2/10/2023,9982345678,4.7
+REST-PUN-001,Punjab Grill,Pune,Maharashtra,India,Wakad Pune,Punjabi,11/5/2020,8782345678,4.3
+REST-CHN-001,Coastal Bites,Chennai,Tamil Nadu,India,Sawastika Chennai,Seafood,8/12/2022,7722345678,4.4
+REST-AUH-001,Spice Route Downtown,Abu Dhabi,Abu Dhabi,UAE,Corniche Road Abu Dhabi,North Indian,1/15/2023,9721234567,4.0
+REST-AUH-002,Spice Route Al Wahda,Abu Dhabi,Abu Dhabi,UAE,Al Wahda Mall Abu Dhabi,North Indian,6/20/2023,9714346789,4.2
+REST-DXB-001,Spice Route Marina,Dubai,Dubai,UAE,Dubai Marina Walk,North Indian,3/10/2023,7144567890,4.9
+REST-DXB-002,Spice Route Mall of Emirates,Dubai,Dubai,UAE,Mall of the Emirates Dubai,North Indian,9/5/2023,8656788901,3.7
+REST-SHJ-001,Spice Route City Centre,Sharjah,Sharjah,UAE,City Centre Sharjah,Punjabi,2/14/2024,9422345678,2.2

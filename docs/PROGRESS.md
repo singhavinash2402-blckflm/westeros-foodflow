@@ -1,99 +1,306 @@
-# FoodFlow — Progress
+﻿# FoodFlow Progress Tracker
 
-## Current Status
+## Phase 0 — Project Foundation
 
-**Current phase:** Incremental CSV Processing
-
-**Current environment:** Databricks Free Edition + local Windows development workspace
-
----
-
-## Phase 0 — Local Development Foundation
-
-* [x] Python 3.12 installed
-* [x] Project-local `.venv`
-* [x] VS Code configured to use `.venv`
-* [x] pip configured
-* [x] Git installed
-* [x] Git identity configured
-* [x] Git repository initialized
-* [x] `.gitignore` created
-* [ ] Initial Git commit
-* [ ] GitHub remote
+- [x] Create local project structure
+- [x] Initialize Git repository
+- [x] Create initial Git commit
+- [x] Create GitHub remote
+- [x] Push `main` branch
+- [x] Create feature branch for incremental ingestion
 
 ---
 
-## Phase 1 — Databricks Foundation
+## Phase 1 — Databricks / Delta Lake / Unity Catalog Foundations
 
-* [x] Databricks Free Edition configured
-* [x] Unity Catalog
-* [x] FoodFlow catalog
-* [x] FoodFlow schemas
-* [x] Managed volume
-* [x] Raw CSV ingestion
-* [x] Bronze Delta table
-* [x] Silver Delta table
-* [x] Data-quality validation
-* [x] Gold aggregation
-* [x] Gold Delta table
-* [x] Delta table validation
-* [x] Execution plan analysis
-* [x] Delta table details
-* [x] Delta table history
+- [x] Create FoodFlow catalog
+- [x] Create Bronze, Silver, and Gold schemas
+- [x] Create managed volume
+- [x] Upload raw restaurant CSV
+- [x] Create Bronze Delta table
+- [x] Create Silver Delta table
+- [x] Create Gold aggregate
+- [x] Perform data-quality checks
+- [x] Inspect execution plan
+- [x] Inspect Delta table details
+- [x] Inspect Delta history
 
 ---
 
-## Phase 2 — Incremental Processing
+## Phase 2 — Incremental CSV Ingestion
 
-* [ ] Create second CSV
-* [ ] Introduce new records
-* [ ] Introduce updated records
-* [ ] Introduce duplicate records
-* [ ] Identify business key
-* [ ] Deduplicate source data
-* [ ] Implement Delta MERGE
-* [ ] Validate inserts
-* [ ] Validate updates
-* [ ] Validate duplicate handling
-* [ ] Test idempotency
-* [ ] Add batch/audit metadata
-* [ ] Inspect Delta history
+- [x] Create second synthetic CSV batch
+- [x] Introduce new records
+- [x] Introduce updated records
+- [x] Introduce unchanged records
+- [x] Introduce duplicate records
+- [x] Identify `restaurant_id` as business key
+- [x] Detect duplicate business keys
+- [x] Deduplicate incoming batch
+- [x] Add `_batch_id`
+- [x] Add ingestion audit metadata
+- [x] Implement Delta `MERGE`
+- [x] Implement null-safe change detection
+- [x] Validate update behavior
+- [x] Validate insert behavior
+- [x] Validate unchanged-record behavior
+- [x] Validate duplicate handling
+- [x] Replay the same batch
+- [x] Validate data-level idempotency
+- [x] Inspect Delta transaction history
+- [x] Perform historical `_batch_id` backfill
+- [x] Validate migrated batch metadata
+- [x] Recompute Gold aggregate from current Silver state
+- [x] Validate Gold row counts against Silver
 
-### Planned Test File
+### Incremental ingestion result
 
-restaurants_20262309_02.csv
+Batch 2 contained 4 source rows:
 
-Expected test scenario includes an update to:
+- 1 updated record
+- 1 new record
+- 1 unchanged record
+- 1 exact duplicate
 
-REST-DXB-001
+After deduplication:
 
-where the rating changes from:
+- Source rows: 4
+- Unique business keys: 3
+- Silver updates: 1
+- Silver inserts: 1
+- Silver unchanged: 1
+- Silver final row count: 11
 
-4.9 → 4.7
+The replay produced zero additional data changes, demonstrating data-level idempotency.
+
+### Batch metadata result
+
+- `20260923_01`: 9 historical records
+- `20260924_02`: 2 records last changed by the incremental batch
+- `NULL`: 0 records
+
+`_batch_id` currently represents the batch that last modified the current Silver row.
+
+### Gold result
+
+- Silver current-state rows: 11
+- Gold groups: 9
+- Sum of Gold `restaurant_count`: 11
+
+Gold is recomputed from Silver because it represents derived aggregate state rather than row-level source state.
 
 ---
 
-## Future Phases
+## Phase 3 — Relational SQL Source
 
-* [ ] Relational SQL source
-* [ ] Watermark ingestion
-* [ ] Azure Data Factory
-* [ ] CDC
-* [ ] ADLS Gen2
-* [ ] REST API ingestion
-* [ ] AWS S3
-* [ ] Multi-cloud ingestion
-* [ ] dbt
-* [ ] Dimensional modeling
-* [ ] Streaming
-* [ ] Airflow
-* [ ] Data contracts
-* [ ] Advanced testing
-* [ ] Observability
-* [ ] Performance optimization
-* [ ] Security
-* [ ] Terraform
-* [ ] CI/CD
-* [ ] Power BI
-* [ ] AI-assisted engineering
-* [ ] Agentic AI
+- [ ] Set up SQL Server / Azure SQL
+- [ ] Create source restaurant tables
+- [ ] Implement full load
+- [ ] Implement watermark-based incremental ingestion
+- [ ] Compare watermarking with CDC
+
+## Phase 4 — Azure Data Factory
+
+- [ ] Linked services
+- [ ] Datasets
+- [ ] Parameters
+- [ ] Variables
+- [ ] Copy Activity
+- [ ] Lookup
+- [ ] ForEach
+- [ ] Metadata-driven ingestion
+- [ ] Triggers
+- [ ] Retry handling
+- [ ] Monitoring
+- [ ] Databricks notebook orchestration
+
+## Phase 5 — CDC
+
+- [ ] Insert handling
+- [ ] Update handling
+- [ ] Delete handling
+- [ ] CDC ingestion to ADLS / Delta
+- [ ] CDC MERGE patterns
+
+## Phase 6 — Azure ADLS Gen2
+
+- [ ] Storage account
+- [ ] Container
+- [ ] Hierarchical namespace
+- [ ] RBAC
+- [ ] Managed identity / access connector
+- [ ] Databricks to ADLS integration
+
+## Phase 7 — REST API / JSON
+
+- [ ] API authentication
+- [ ] Pagination
+- [ ] Rate limits
+- [ ] Nested JSON
+- [ ] Schema evolution
+- [ ] Incremental API ingestion
+
+## Phase 8 — AWS S3 / Multi-cloud
+
+- [ ] S3
+- [ ] IAM
+- [ ] Cross-cloud access
+- [ ] S3 to Databricks
+- [ ] ADLS to Databricks
+
+## Phase 9 — dbt
+
+- [ ] dbt setup
+- [ ] Staging models
+- [ ] Intermediate models
+- [ ] Mart models
+- [ ] `ref()`
+- [ ] Incremental models
+- [ ] Tests
+- [ ] Documentation
+- [ ] Lineage
+
+## Phase 10 — Dimensional Modeling
+
+- [ ] Fact tables
+- [ ] Dimension tables
+- [ ] Grain
+- [ ] Natural keys
+- [ ] Surrogate keys
+- [ ] SCD Type 1
+- [ ] SCD Type 2
+- [ ] FoodFlow star schema
+
+## Phase 11 — Streaming
+
+- [ ] Azure Event Hubs
+- [ ] Databricks Structured Streaming
+- [ ] Streaming Bronze
+- [ ] Streaming Silver
+- [ ] Streaming Gold
+- [ ] Kafka concepts
+- [ ] Kafka implementation
+
+## Phase 12 — Streaming Engineering
+
+- [ ] Event time
+- [ ] Processing time
+- [ ] Watermarks
+- [ ] Late data
+- [ ] Out-of-order events
+- [ ] Windows
+- [ ] Stateful processing
+- [ ] Checkpoints
+- [ ] Streaming deduplication
+- [ ] Delivery guarantees
+
+## Phase 13 — Airflow
+
+- [ ] Local Airflow setup
+- [ ] DAGs
+- [ ] Tasks
+- [ ] Dependencies
+- [ ] Scheduling
+- [ ] Sensors
+- [ ] Retries
+- [ ] Backfills
+- [ ] Parameters
+- [ ] Connections
+- [ ] Variables
+- [ ] Databricks orchestration
+- [ ] Monitoring
+
+## Phase 14 — Data Quality / Observability
+
+- [ ] Freshness
+- [ ] Volume
+- [ ] Null checks
+- [ ] Duplicate checks
+- [ ] Schema changes
+- [ ] Failed-record handling
+- [ ] Pipeline duration
+- [ ] Late data
+- [ ] Throughput
+- [ ] Data drift
+
+## Phase 15 — Data Contracts / Schema Evolution
+
+- [ ] Schema enforcement
+- [ ] Schema evolution
+- [ ] Backward compatibility
+- [ ] Breaking changes
+- [ ] Non-breaking changes
+
+## Phase 16 — Testing
+
+- [ ] Pytest unit tests
+- [ ] Integration tests
+- [ ] Data-quality tests
+- [ ] dbt tests
+- [ ] Pipeline tests
+
+## Phase 17 — Performance / Cost
+
+- [ ] Execution plans
+- [ ] Shuffle
+- [ ] Broadcast joins
+- [ ] AQE
+- [ ] Data skew
+- [ ] Partitioning
+- [ ] Small-file problem
+- [ ] Predicate pushdown
+- [ ] File sizing
+- [ ] Delta optimization / clustering concepts
+- [ ] Caching
+- [ ] Cost/performance tradeoffs
+
+## Phase 18 — Security
+
+- [ ] Entra ID
+- [ ] RBAC
+- [ ] Managed identity
+- [ ] Key Vault
+- [ ] AWS IAM
+- [ ] Roles and policies
+- [ ] STS
+- [ ] Secret management
+
+## Phase 19 — Terraform / IaC
+
+- [ ] Providers
+- [ ] Resources
+- [ ] Variables
+- [ ] Outputs
+- [ ] State
+- [ ] Modules
+- [ ] Plan
+- [ ] Apply
+
+## Phase 20 — Git / CI/CD
+
+- [ ] Feature branches
+- [ ] Pull requests
+- [ ] GitHub Actions
+- [ ] Automated tests
+- [ ] dbt tests
+- [ ] Build validation
+- [ ] Deployment automation
+
+## Phase 21 — Power BI / Serving
+
+- [ ] Gold to Power BI
+- [ ] Restaurant analytics
+- [ ] Customer analytics
+- [ ] Order analytics
+- [ ] Delivery analytics
+- [ ] Rating trends
+
+## Phase 22 — AI / Agentic AI
+
+- [ ] SQL assistant
+- [ ] Data-quality assistant
+- [ ] Pipeline documentation assistant
+- [ ] PySpark coding assistant
+- [ ] Pipeline monitoring agent
+- [ ] Delta history/log analysis agent
+- [ ] Automated diagnosis/recommendation workflow
