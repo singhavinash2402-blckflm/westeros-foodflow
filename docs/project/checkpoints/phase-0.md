@@ -1,7 +1,7 @@
-# FoodFlow Phase 0 Checkpoint — Project Foundation
+# westeros-foodflow Phase 0 Checkpoint — Project Foundation
 
 **Status:** Completed  
-**Purpose:** Establish the FoodFlow repository and project foundation.
+**Purpose:** Establish the westeros-foodflow repository and project foundation.
 
 ## Scope
 - Created the `westeros-foodflow` project/repository.
@@ -10,7 +10,7 @@
 - Established Git/branch/PR-based development as the project workflow.
 
 ## Learning principle
-FoodFlow is intentionally built progressively:
+westeros-foodflow is intentionally built progressively:
 1. Understand manually.
 2. Automate deterministically.
 3. Introduce AI-assisted automation.

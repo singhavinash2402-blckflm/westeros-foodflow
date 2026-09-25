@@ -1,8 +1,8 @@
-# FoodFlow Learning Log
+# westeros-foodflow — Learning Log
 
 ## 2026-09-24 — Project Foundation
 
-Established the FoodFlow project repository and development environment.
+Established the westeros-foodflow project repository and development environment.
 
 ### Topics covered
 
@@ -124,3 +124,74 @@ Example:
 - `restaurants_20260923_02.csv`
 
 Historical Databricks volume filenames from the earlier exercise are intentionally left unchanged to preserve lineage.
+
+
+---
+
+## 2026-09-25 — Phase 3 Relational SQL Design and Azure SQL Foundation
+
+Phase 3 introduced the relational source-system learning path.
+
+### Concepts locked
+
+- Relational entity modeling
+- Primary and foreign keys
+- Business keys versus surrogate keys
+- Transactional versus derived data
+- Historical transaction snapshots
+- Order lifecycle modeling
+- Review/event history
+- Watermark-based incremental extraction
+- SQL source metadata
+- Controlled data-quality scenarios
+
+### Relational model
+
+The source model contains ten tables:
+
+- `customers`
+- `restaurants`
+- `menu_items`
+- `orders`
+- `order_items`
+- `payments`
+- `delivery_partners`
+- `order_status_history`
+- `restaurant_reviews`
+- `delivery_partner_reviews`
+
+### Dataset learning progression
+
+The project intentionally avoids jumping directly to a large dataset:
+
+```text
+Manual Stage A
+10 restaurants / 100 customers / 500 orders
+        ↓
+Deterministic Stage A2
+5K dataset
+        ↓
+AI-assisted Stage B
+~15K orders
+        ↓
+ADF
+250K orders / ~2.9M relational rows
+```
+
+This progression separates foundational engineering, ordinary automation, AI-assisted automation, and orchestration at meaningful learning boundaries.
+
+### Azure SQL foundation
+
+Provisioned:
+
+- `rg-westeros-foodflow-dev`
+- `sql-westeros-foodflow-dev`
+- `westeros-foodflow`
+
+The database uses the Azure SQL Free Offer with serverless General Purpose / Standard-series (Gen5), 2 vCores, and 32 GB.
+
+### Current state
+
+Azure SQL provisioning is complete.
+
+The next learning step is to create the locked relational schema and manually build the Stage A dataset before introducing JDBC ingestion.

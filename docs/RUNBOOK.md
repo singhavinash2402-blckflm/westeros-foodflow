@@ -1,8 +1,8 @@
-# FoodFlow — Runbook
+# westeros-foodflow — Runbook
 
 ## 1. Purpose
 
-This runbook contains practical procedures for developing, validating, troubleshooting, and operating FoodFlow.
+This runbook contains practical procedures for developing, validating, troubleshooting, and operating westeros-foodflow.
 
 The document will evolve as new technologies and pipeline components are introduced.
 
@@ -153,7 +153,7 @@ Gold
 
 ---
 
-## 6. Current Incremental Processing Workflow
+## 6. Historical Incremental CSV Processing Workflow
 
 The next implementation uses:
 
@@ -313,7 +313,7 @@ After completing a meaningful feature:
 
 # 12. Future Production Runbook Areas
 
-The following sections will be added as FoodFlow grows:
+The following sections will be added as westeros-foodflow grows:
 
 * ADF pipeline execution
 * ADF failure recovery
@@ -332,3 +332,165 @@ The following sections will be added as FoodFlow grows:
 * Reprocessing
 * Performance troubleshooting
 * CI/CD deployment failures
+
+
+---
+
+## 12. Phase 3 — Azure SQL Foundation
+
+Current Azure SQL resources:
+
+```text
+Resource Group:
+rg-westeros-foodflow-dev
+
+SQL Server:
+sql-westeros-foodflow-dev
+
+Database:
+westeros-foodflow
+```
+
+Current configuration:
+
+- Azure SQL Free Offer
+- General Purpose / Serverless / Standard-series (Gen5)
+- 2 vCores
+- 32 GB
+- Central India
+- Zone redundancy disabled
+- Locally redundant backup storage
+- Overage billing disabled
+- Azure services/resources access disabled
+- Private endpoint none
+- Minimum TLS 1.2
+- Identity not enabled
+- Service-managed TDE
+
+### Current Phase 3 sequence
+
+```text
+Azure SQL
+   ↓
+Create 10-table schema
+   ↓
+Stage A — 10 restaurants / 100 customers / 500 orders
+   ↓
+Validate relationships and business rules
+   ↓
+JDBC
+   ↓
+SQL → Bronze
+   ↓
+Bronze → Silver
+   ↓
+Stage A2 — 5K deterministic dataset
+   ↓
+Stage B — ~15K AI-assisted dataset
+   ↓
+ADF
+   ↓
+250K orders / ~2.9M relational rows
+```
+
+Do not create the 250K-order dataset during initial SQL setup.
+
+---
+
+## 13. Phase 3 — Relational Schema Validation
+
+Before inserting Stage A data:
+
+1. Execute the schema DDL.
+2. Confirm all ten tables exist.
+3. Confirm primary keys.
+4. Confirm foreign keys.
+5. Confirm domain constraints.
+6. Confirm customer email uniqueness.
+7. Confirm indexes, especially `updated_at` indexes.
+8. Confirm `IDENTITY` behavior for surrogate keys.
+
+After Stage A data is loaded:
+
+1. Validate all foreign-key relationships.
+2. Validate order-item references.
+3. Validate payment references.
+4. Validate status-history references.
+5. Validate review references.
+6. Validate `DELIVERY` partner rules.
+7. Validate review ratings.
+8. Validate positive quantities and monetary values.
+
+---
+
+## 14. Phase 3 — JDBC Connectivity
+
+The SQL source will be accessed from Databricks through JDBC.
+
+Do not place credentials directly in notebooks or Git.
+
+The initial connectivity test should prove:
+
+```text
+Databricks
+   ↓
+JDBC
+   ↓
+Azure SQL
+   ↓
+SELECT against a known table
+```
+
+Only after connectivity is verified should the SQL → Bronze ingestion implementation begin.
+
+---
+
+## 15. Phase 3 — SQL Watermark Extraction
+
+Full extraction example:
+
+```sql
+SELECT * FROM dbo.orders;
+```
+
+Incremental extraction:
+
+```sql
+SELECT *
+FROM dbo.orders
+WHERE updated_at > @last_watermark
+  AND updated_at <= @current_watermark;
+```
+
+Validation must include:
+
+- record exactly at `last_watermark`;
+- record just after `last_watermark`;
+- record exactly at `current_watermark`;
+- record just after `current_watermark`.
+
+Expected rule:
+
+- lower boundary is exclusive;
+- upper boundary is inclusive.
+
+This pattern captures inserts and updates represented by `updated_at`, but not hard deletes.
+
+---
+
+## 16. Documentation After Each Completed Stage
+
+At every completed stage:
+
+1. Update `docs/PROJECT_PLAN.md`.
+2. Update `docs/PROGRESS.md`.
+3. Update `docs/LEARNING_LOG.md`.
+4. Update architecture/data dictionary/decisions as applicable.
+5. Update the relevant checkpoint.
+6. Update `docs/AI_AGENT_ROADMAP.md` if AI/agentic scope changes.
+7. Review `git diff`.
+8. Review `git status`.
+9. Commit.
+10. Push only at the agreed milestone.
+
+Current decision: Phase 3 checkpoint commits remain local until Phase 3 is complete.

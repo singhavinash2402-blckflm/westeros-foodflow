@@ -1,7 +1,7 @@
-# FoodFlow Phase 1 Checkpoint — CSV / Medallion Foundation
+# westeros-foodflow Phase 1 Checkpoint — CSV / Medallion Foundation
 
 **Status:** Completed  
-**Source:** CSV-based FoodFlow foundation.
+**Source:** CSV-based westeros-foodflow foundation.
 
 ## Scope
 - Established the initial CSV source and relationally meaningful restaurant/customer/order-style data foundations.

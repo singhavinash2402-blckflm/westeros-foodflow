@@ -1,8 +1,8 @@
-# FoodFlow Data Dictionary
+# westeros-foodflow — Data Dictionary
 
 ## Purpose
 
-This document defines the structure, meaning, and business semantics of the datasets used in the FoodFlow project.
+This document defines the structure, meaning, and business semantics of the datasets used in the westeros-foodflow project.
 
 The dictionary will evolve as new ingestion patterns, transformations, data quality rules, dimensional models, streaming datasets, and serving layers are introduced.
 
@@ -10,7 +10,7 @@ The dictionary will evolve as new ingestion patterns, transformations, data qual
 
 ## 1. Current Data Architecture
 
-FoodFlow currently uses a Medallion-style architecture:
+westeros-foodflow currently uses a Medallion-style architecture:
 
 ```text
 Source Files
@@ -394,7 +394,7 @@ Current data quality checks include validation of:
 - business key uniqueness
 - Silver-to-Gold reconciliation
 
-The following concepts are part of the FoodFlow data quality strategy and will expand in later phases:
+The following concepts are part of the westeros-foodflow data quality strategy and will expand in later phases:
 
 - freshness
 - volume anomalies
@@ -434,7 +434,7 @@ This is an important property for reliable batch ingestion and future orchestrat
 
 ## 11. Future Data Dictionary Expansion
 
-This document will be expanded as FoodFlow introduces additional data sources and architecture components.
+This document will be expanded as westeros-foodflow introduces additional data sources and architecture components.
 
 Planned additions include:
 
@@ -544,7 +544,7 @@ When a new dataset or column is introduced:
 8. Update this file in the same feature/phase where the schema changes.
 9. Commit the documentation alongside the implementation.
 
-The data dictionary should remain aligned with the actual FoodFlow implementation.
+The data dictionary should remain aligned with the actual westeros-foodflow implementation.
 
 18. Naming Conventions
 Source Files
@@ -583,4 +583,214 @@ Document lineage or source information.
 Update this file in the same feature/phase where the schema changes.
 Commit the documentation alongside the implementation.
 
-The data dictionary should remain aligned with the actual FoodFlow implementation.
+The data dictionary should remain aligned with the actual westeros-foodflow implementation.
+
+---
+
+# 9. Phase 3 Relational SQL Source
+
+## Relational source database
+
+The Phase 3 source database is:
+
+```text
+Azure SQL
+  Server: sql-westeros-foodflow-dev
+  Database: westeros-foodflow
+```
+
+The relational domain contains ten tables.
+
+### 9.1 `customers`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `customer_id` | BIGINT | PK / IDENTITY |
+| `customer_name` | VARCHAR(150) | NOT NULL |
+| `email` | VARCHAR(255) | NOT NULL; unique |
+| `phone` | VARCHAR(20) | Nullable |
+| `city` | VARCHAR(100) | Nullable |
+| `state` | VARCHAR(100) | Nullable |
+| `created_at` | DATETIME2 | NOT NULL |
+| `updated_at` | DATETIME2 | NOT NULL; incremental extraction candidate |
+| `is_active` | BIT | NOT NULL |
+
+### 9.2 `restaurants`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `restaurant_id` | VARCHAR(20) | PK / business key |
+| `restaurant_name` | VARCHAR(150) | NOT NULL |
+| `city` | VARCHAR(100) | NOT NULL |
+| `state` | VARCHAR(100) | NOT NULL |
+| `country` | VARCHAR(100) | NOT NULL |
+| `address` | VARCHAR(300) | Nullable |
+| `cuisine` | VARCHAR(100) | NOT NULL |
+| `opening_date` | DATE | NOT NULL |
+| `phone` | VARCHAR(20) | Nullable |
+| `rating` | DECIMAL(3,2) | Nullable |
+| `created_at` | DATETIME2 | NOT NULL |
+| `updated_at` | DATETIME2 | NOT NULL |
+| `is_active` | BIT | NOT NULL |
+
+Restaurant identifiers use business values such as:
+
+```text
+REST-SHJ-001
+REST-SHJ-002
+REST-DEL-001
+REST-BLR-001
+```
+
+### 9.3 `menu_items`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `menu_item_id` | BIGINT | PK / IDENTITY / globally unique |
+| `restaurant_id` | VARCHAR(20) | FK to `restaurants` |
+| `item_name` | VARCHAR(150) | NOT NULL |
+| `category` | VARCHAR(100) | Nullable |
+| `description` | VARCHAR(500) | Nullable |
+| `price` | DECIMAL(10,2) | Positive |
+| `is_available` | BIT | NOT NULL |
+| `created_at` | DATETIME2 | NOT NULL |
+| `updated_at` | DATETIME2 | NOT NULL |
+
+`menu_item_id` is the sole primary key. No composite `(menu_item_id, restaurant_id)` key is used.
+
+### 9.4 `orders`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `order_id` | BIGINT | PK / IDENTITY |
+| `customer_id` | BIGINT | FK |
+| `restaurant_id` | VARCHAR(20) | FK |
+| `delivery_partner_id` | BIGINT | Nullable FK |
+| `order_type` | VARCHAR(20) | `DINE_IN`, `TAKE_AWAY`, `DELIVERY` |
+| `order_status` | VARCHAR(30) | Lifecycle status |
+| `order_total` | DECIMAL(12,2) | Positive |
+| `delivery_fee` | DECIMAL(10,2) | Positive/non-negative as defined by validation |
+| `tax_amount` | DECIMAL(10,2) | Positive/non-negative as defined by validation |
+| `order_date` | DATETIME2(3) | NOT NULL |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL; watermark candidate |
+
+Order lifecycle values include:
+
+```text
+PLACED
+CONFIRMED
+PREPARING
+READY_FOR_PICKUP
+PICKED_UP
+ON_THE_WAY
+DELIVERED
+CANCELLED_BY_CUSTOMER
+CANCELLED_PAYMENT_FAILURE
+```
+
+### 9.5 `order_items`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `order_item_id` | BIGINT | PK / IDENTITY |
+| `order_id` | BIGINT | FK |
+| `menu_item_id` | BIGINT | FK |
+| `quantity` | INT | Positive |
+| `unit_price` | DECIMAL(10,2) | Historical transaction snapshot |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL |
+
+`unit_price` records the transaction-time price and is intentionally independent from the current `menu_items.price`.
+
+### 9.6 `payments`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `payment_id` | BIGINT | PK / IDENTITY |
+| `order_id` | BIGINT | FK |
+| `payment_method` | VARCHAR(30) | `UPI`, `CARD`, `NET_BANKING`, `CASH`, `WALLET` |
+| `payment_status` | VARCHAR(30) | `PENDING`, `AUTHORIZED`, `SUCCESS`, `FAILED`, `REFUNDED` |
+| `amount` | DECIMAL(12,2) | Positive |
+| `transaction_reference` | VARCHAR(100) | Nullable |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL |
+
+### 9.7 `delivery_partners`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `delivery_partner_id` | BIGINT | PK / IDENTITY |
+| `partner_name` | VARCHAR(150) | NOT NULL |
+| `phone` | VARCHAR(20) | Nullable |
+| `vehicle_type` | VARCHAR(30) | Nullable |
+| `city` | VARCHAR(100) | NOT NULL |
+| `status` | VARCHAR(30) | `AVAILABLE`, `BUSY`, `OFFLINE` |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL |
+
+### 9.8 `order_status_history`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `status_history_id` | BIGINT | PK / IDENTITY |
+| `order_id` | BIGINT | FK |
+| `status` | VARCHAR(30) | Lifecycle status |
+| `status_timestamp` | DATETIME2(3) | NOT NULL |
+| `changed_by` | VARCHAR(50) | Nullable |
+
+This table stores lifecycle events; `orders.order_status` represents current state.
+
+### 9.9 `restaurant_reviews`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `review_id` | BIGINT | PK / IDENTITY |
+| `order_id` | BIGINT | FK |
+| `customer_id` | BIGINT | FK |
+| `restaurant_id` | VARCHAR(20) | FK |
+| `rating` | DECIMAL(2,1) | 1–5 |
+| `review_text` | VARCHAR(1000) | Nullable |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL |
+
+### 9.10 `delivery_partner_reviews`
+
+| Column | Type | Key / Rule |
+|---|---|---|
+| `review_id` | BIGINT | PK / IDENTITY |
+| `order_id` | BIGINT | FK |
+| `customer_id` | BIGINT | FK |
+| `delivery_partner_id` | BIGINT | FK |
+| `rating` | DECIMAL(2,1) | 1–5 |
+| `review_text` | VARCHAR(1000) | Nullable |
+| `created_at` | DATETIME2(3) | NOT NULL |
+| `updated_at` | DATETIME2(3) | NOT NULL |
+
+---
+
+## 10. SQL ingestion metadata
+
+SQL ingestion uses source-system/batch metadata rather than `_source_file`:
+
+| Metadata field | Purpose |
+|---|---|
+| `_ingested_at` | Timestamp of ingestion |
+| `_ingestion_date` | Calendar date of ingestion |
+| `_source_system` | Identifies Azure SQL as the source |
+| `_batch_id` | Identifies the ingestion batch |
+
+The existing CSV-specific `_source_file` lineage remains unchanged for historical CSV processing.
+
+---
+
+## 11. Dataset implementation sequence
+
+The relational dataset is intentionally staged:
+
+1. Stage A: 10 restaurants, 100 customers, 500 orders.
+2. Stage A2: deterministic scaling to approximately 5K orders.
+3. Stage B: AI-assisted generation to approximately 15K orders.
+4. ADF phase: approximately 250K orders and approximately 2.9M relational rows.
+
+The 250K-order dataset is not created during initial Azure SQL provisioning.

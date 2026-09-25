@@ -1,4 +1,4 @@
-# FoodFlow Phase 2 Checkpoint — Incremental CSV Ingestion
+# westeros-foodflow Phase 2 Checkpoint — Incremental CSV Ingestion
 
 **Status:** Completed and merged to `main`  
 **Checkpoint:** `FOODFLOW-2026-09-24-PHASE2-MERGED`
@@ -10,7 +10,7 @@
 - Established a stable checkpoint before beginning Phase 3.
 
 ## Key learning
-FoodFlow now demonstrates the difference between:
+westeros-foodflow now demonstrates the difference between:
 - initial/full ingestion;
 - subsequent/incremental ingestion;
 - source-file-driven incremental processing.

@@ -1,10 +1,10 @@
-# FoodFlow Engineering Decisions
+# westeros-foodflow — Engineering Decisions
 
 ## Decision 001 — Use Databricks Free Edition for Initial Learning
 
 **Status:** Accepted
 
-Databricks Free Edition is used for the initial FoodFlow implementation.
+Databricks Free Edition is used for the initial westeros-foodflow implementation.
 
 Azure ADLS integration is deferred until the project reaches the appropriate Azure infrastructure phase.
 
@@ -26,7 +26,7 @@ External ADLS and AWS S3 storage will be introduced later as part of the multi-c
 
 Python dependencies are isolated in the project-local `.venv`.
 
-This keeps the FoodFlow development environment reproducible and prevents global package conflicts.
+This keeps the westeros-foodflow development environment reproducible and prevents global package conflicts.
 
 ---
 
@@ -130,7 +130,7 @@ The migration was validated after execution.
 
 Gold aggregate tables are derived state.
 
-For the current FoodFlow design, Gold is recomputed and overwritten from Silver after incremental changes.
+For the current westeros-foodflow design, Gold is recomputed and overwritten from Silver after incremental changes.
 
 Silver uses `MERGE` because it represents current row-level entities.
 
@@ -183,3 +183,119 @@ artifacts/
 ```
 
 The Python notebook and the corresponding DBC backup are maintained together for important Databricks development work.
+
+
+---
+
+## Decision 012 — Project and Azure SQL Resource Naming
+
+**Status:** Accepted
+
+The project/repository name is:
+
+```text
+westeros-foodflow
+```
+
+Phase 3 Azure resource naming uses:
+
+```text
+rg-westeros-foodflow-dev
+sql-westeros-foodflow-dev
+westeros-foodflow
+```
+
+Existing executed Databricks objects are not renamed solely for documentation consistency when doing so would alter historical lineage.
+
+---
+
+## Decision 013 — Phase 3 Dataset Implementation Sequence
+
+**Status:** Accepted
+
+The relational dataset is implemented progressively:
+
+```text
+Azure SQL
+   ↓
+Create schema
+   ↓
+Stage A — 10 restaurants / 100 customers / 500 orders
+   ↓
+Relationship + business-rule validation
+   ↓
+JDBC connectivity
+   ↓
+SQL → Bronze
+   ↓
+Bronze → Silver
+   ↓
+Stage A2 — deterministic scaling to 5K
+   ↓
+Stage B — AI-assisted generation to ~15K
+   ↓
+ADF
+   ↓
+250K orders / ~2.9M relational rows
+```
+
+The large 250K-order dataset is deliberately deferred until the ADF phase.
+
+---
+
+## Decision 014 — Azure SQL as a Separate Relational Integration Pattern
+
+**Status:** Accepted
+
+Azure SQL is introduced as a separate source-system integration pattern from the Databricks-managed storage used in the current Free Edition environment.
+
+The initial SQL ingestion pattern is JDBC-based and uses SQL-specific ingestion metadata:
+
+- `_ingested_at`
+- `_ingestion_date`
+- `_source_system`
+- `_batch_id`
+
+The CSV-specific `_source_file` field is not required for SQL ingestion.
+
+---
+
+## Decision 015 — Watermark-based Incremental SQL Extraction Before CDC
+
+**Status:** Accepted
+
+The initial incremental SQL pattern uses `updated_at` watermarks:
+
+```sql
+SELECT *
+FROM dbo.orders
+WHERE updated_at > @last_watermark
+  AND updated_at <= @current_watermark;
+```
+
+This captures inserts and updates but does not capture hard deletes.
+
+The project will later compare this pattern with soft deletes, Change Tracking, and CDC.
+
+---
+
+## Decision 016 — Large Dataset Deferred to ADF Phase
+
+**Status:** Accepted
+
+The eventual large relational dataset is:
+
+- customers: 25,000
+- restaurants: 500
+- menu_items: 15,000
+- delivery_partners: 1,000
+- orders: 250,000
+- order_items: ~750,000
+- payments: ~250,000
+- order_status_history: ~1,500,000
+- restaurant_reviews: ~75,000
+- delivery_partner_reviews: ~40,000
+
+Approximately 2.9 million relational rows are expected.
+
+This dataset is not created immediately after Azure SQL provisioning. It is introduced during the ADF learning/implementation phase.

@@ -1,17 +1,15 @@
-# FoodFlow — Learning Roadmap
+# westeros-foodflow — Learning Roadmap
 
 ## Learning Philosophy
 
-FoodFlow follows a build-first learning approach.
-
-For each technology:
+The project follows a build-first learning approach:
 
 ```text
 Concept
    ↓
 Small manual exercise
    ↓
-Realistic FoodFlow implementation
+Realistic implementation
    ↓
 Failure / edge cases
    ↓
@@ -19,24 +17,25 @@ Testing
    ↓
 Optimization
    ↓
-Automation
+Deterministic automation
    ↓
 AI assistance
+   ↓
+Governed agentic workflows
 ```
 
 AI is used to accelerate repetitive work only after the underlying engineering concepts are understood.
 
 ---
 
-## Roadmap
+## Completed foundations
 
 ### Foundation
 
 - [x] Python installation
 - [x] Project-local Python virtual environment
 - [x] VS Code Python interpreter configuration
-- [x] Git installation
-- [x] Git configuration
+- [x] Git installation/configuration
 - [x] Git repository initialization
 - [x] `.gitignore`
 
@@ -54,30 +53,61 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [x] Delta history
 - [x] Execution plan analysis
 
-### Incremental Processing — Current
+### Incremental CSV
 
-- [ ] Second source file
-- [ ] New records
-- [ ] Updated records
-- [ ] Duplicate records
-- [ ] Deduplication
-- [ ] Business keys
-- [ ] Delta `MERGE`
-- [ ] Idempotency
-- [ ] Batch/audit columns
-- [ ] Validation
-- [ ] Delta history after incremental processing
+- [x] Multiple source batches
+- [x] New records
+- [x] Updated records
+- [x] Duplicate records
+- [x] Deduplication
+- [x] Business keys
+- [x] Delta `MERGE`
+- [x] Idempotency
+- [x] Batch/audit columns
+- [x] Historical metadata backfill
+- [x] Validation
+- [x] Delta history
 
-### Relational Data
+---
 
-- [ ] SQL Server / Azure SQL
-- [ ] Source table design
-- [ ] Full ingestion
-- [ ] Watermarking
-- [ ] Incremental ingestion
-- [ ] Incremental validation
+# Current — Relational SQL
 
-### Azure Data Factory
+## Stage 3A
+
+- [x] Azure SQL resource group
+- [x] Azure SQL logical server
+- [x] Azure SQL database
+- [x] Free Offer configuration
+- [ ] 10-table relational schema
+- [ ] Stage A dataset
+- [ ] Relationship validation
+- [ ] Business-rule validation
+- [ ] JDBC connectivity
+- [ ] SQL → Bronze
+- [ ] Bronze → Silver
+- [ ] SQL watermark extraction
+- [ ] Lower/upper watermark boundary testing
+
+## Stage A2 — Deterministic scaling
+
+- [ ] Parameterized data generation
+- [ ] Repeatable validation
+- [ ] Repeatable test scenarios
+- [ ] 5K dataset
+- [ ] Scale validation
+
+## Stage B — AI-assisted generation
+
+- [ ] AI-assisted repetitive generation
+- [ ] Human review/approval
+- [ ] ~15K dataset
+- [ ] ~60-day order activity
+- [ ] Scale validation
+- [ ] Document AI assistance
+
+---
+
+# Future — Azure Data Factory
 
 - [ ] Linked services
 - [ ] Datasets
@@ -92,16 +122,27 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Monitoring
 - [ ] Databricks orchestration
 
-### CDC
+## Large-scale dataset
+
+- [ ] 250K orders
+- [ ] ~2.9M relational rows
+- [ ] ADF ingestion/orchestration against the large dataset
+
+---
+
+# Future — CDC
 
 - [ ] Insert handling
 - [ ] Update handling
 - [ ] Delete handling
-- [ ] CDC versus watermarking
+- [ ] Watermark versus Change Tracking
+- [ ] Watermark versus CDC
 - [ ] CDC to Delta
-- [ ] MERGE-based processing
+- [ ] MERGE-based CDC processing
 
-### Cloud Storage
+---
+
+# Future — Cloud Storage
 
 - [ ] ADLS Gen2
 - [ ] Azure RBAC
@@ -111,7 +152,9 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] AWS IAM
 - [ ] Multi-cloud ingestion
 
-### APIs
+---
+
+# Future — APIs and JSON
 
 - [ ] REST API fundamentals
 - [ ] Authentication
@@ -122,7 +165,9 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Schema evolution
 - [ ] Incremental API ingestion
 
-### dbt and Modeling
+---
+
+# Future — dbt and Modeling
 
 - [ ] dbt setup
 - [ ] Staging models
@@ -137,7 +182,9 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] SCD Type 1
 - [ ] SCD Type 2
 
-### Streaming
+---
+
+# Future — Streaming
 
 - [ ] Event Hubs
 - [ ] Structured Streaming
@@ -153,23 +200,9 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Deduplication
 - [ ] Kafka concepts
 
-### Airflow
+---
 
-- [ ] Local Airflow
-- [ ] DAGs
-- [ ] Tasks
-- [ ] Dependencies
-- [ ] Scheduling
-- [ ] Sensors
-- [ ] Retries
-- [ ] Backfills
-- [ ] Parameters
-- [ ] Connections
-- [ ] Variables
-- [ ] Databricks orchestration
-- [ ] Monitoring
-
-### Production Engineering
+# Future — Production Engineering
 
 - [ ] Data quality
 - [ ] Data contracts
@@ -186,12 +219,29 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] CI/CD
 - [ ] Power BI
 
-### AI / Agentic AI
+---
 
-- [ ] SQL assistant
-- [ ] PySpark assistant
-- [ ] Data-quality assistant
-- [ ] Pipeline documentation assistant
-- [ ] Operational data-engineering agent
-- [ ] Agent for pipeline/log/DQ diagnosis
-- [ ] AI-generated remediation recommendations
+# AI / Agentic AI progression
+
+## AI-assisted automation
+
+- [ ] SQL generation assistance
+- [ ] PySpark generation assistance
+- [ ] Synthetic data generation assistance
+- [ ] Data-quality test generation
+- [ ] Documentation assistance
+- [ ] Validation assistance
+
+## Governed agentic workflows
+
+- [ ] Data Agent
+- [ ] Ingestion Agent
+- [ ] Curation/Transformation/Analytics Agent
+- [ ] Monitoring/Reporting Agent
+- [ ] Prediction/ML/Analytics Agent
+- [ ] Tool permission boundaries
+- [ ] Planning constraints
+- [ ] Validation gates
+- [ ] Bounded retry/recovery
+- [ ] Human approval
+- [ ] Audit/reporting

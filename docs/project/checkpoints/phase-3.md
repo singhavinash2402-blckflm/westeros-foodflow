@@ -1,6 +1,6 @@
-# FoodFlow Phase 3 Checkpoint — Relational SQL Source
+# westeros-foodflow Phase 3 Checkpoint — Relational SQL Source
 
-**Status:** Design locked; implementation next  
+**Status:** Stage 3A in progress — Azure SQL provisioned; schema creation next
 **Current master checkpoint:** `FOODFLOW-2026-09-25-PHASE3-PHYSICAL-DESIGN-AI-AUTOMATION-LINEAGE-LOCKED`
 
 ## 1. Relational domain — LOCKED
@@ -62,11 +62,13 @@ Order lifecycle:
 ## 4. Incremental SQL ingestion — LOCKED
 
 Full load:
+
 ```sql
 SELECT * FROM dbo.orders;
 ```
 
 Watermark pattern:
+
 ```sql
 SELECT *
 FROM dbo.orders
@@ -82,9 +84,95 @@ Later topics:
 - CDC;
 - production-grade incremental patterns.
 
-## 5. Initial dataset — LOCKED
+## 5. Azure SQL foundation — COMPLETED
 
-Full initial target:
+Provisioned:
+
+- Resource group: `rg-westeros-foodflow-dev`
+- SQL server: `sql-westeros-foodflow-dev`
+- Database: `westeros-foodflow`
+- Region: Central India
+- Azure SQL Free Offer
+- General Purpose / Serverless / Standard-series (Gen5)
+- 2 vCores
+- 32 GB
+- Zone redundancy disabled
+- Locally redundant backup storage
+- Overage billing disabled
+- Azure services/resources access disabled
+- Private endpoint none
+- Minimum TLS 1.2
+- Identity not enabled
+- Service-managed TDE
+
+## 6. Dataset implementation sequence — LOCKED
+
+```text
+Azure SQL
+   ↓
+Create schema
+   ↓
+Stage A
+10 restaurants
+100 customers
+500 orders
+   ↓
+Validate relationships
+   ↓
+JDBC connectivity
+   ↓
+SQL → Bronze
+   ↓
+Bronze → Silver
+   ↓
+Stage A2 — deterministic scaling to 5K
+   ↓
+Stage B — AI-assisted generation to ~15K
+   ↓
+ADF
+   ↓
+250K orders / ~2.9M relational rows
+```
+
+### Stage A — Manual
+
+Purpose:
+- understand SQL DDL;
+- relationships;
+- data generation;
+- validation;
+- JDBC extraction;
+- Bronze;
+- Silver;
+- data quality.
+
+### Stage A2 — Deterministic automation
+
+Purpose:
+- parameterized/scripted data generation;
+- reusable SQL/templates;
+- configurable row counts;
+- repeatable validation;
+- repeatable test scenarios.
+
+AI is not required for this stage.
+
+### Stage B — AI-assisted automation
+
+Target approximately 15K orders.
+
+AI may assist with:
+- repetitive data-generation code;
+- SQL;
+- validation queries;
+- scaling;
+- test-case generation;
+- documentation.
+
+Human remains responsible for architecture, review, validation, execution approval, and diagnosis.
+
+## 7. 15K dataset target — LOCKED
+
 - 5,000 customers
 - 100 restaurants
 - 3,000 menu items
@@ -98,59 +186,28 @@ Full initial target:
 
 Orders represent approximately 60 days of naturally varying activity. Master entities may predate the 60-day order period.
 
-## 6. Learning and automation progression — LOCKED
+## 8. ADF-scale dataset — LOCKED
 
-### Stage A — Manual
-Small foundational dataset:
-- 10 restaurants
-- 100 customers
-- 500 orders
+Introduced during the ADF phase:
 
-Purpose:
-- understand SQL DDL;
-- relationships;
-- data generation;
-- validation;
-- JDBC extraction;
-- Bronze;
-- Silver;
-- data quality.
+| Table | Initial records |
+|---|---:|
+| customers | 25,000 |
+| restaurants | 500 |
+| menu_items | 15,000 |
+| delivery_partners | 1,000 |
+| orders | 250,000 |
+| order_items | ~750,000 |
+| payments | ~250,000 |
+| order_status_history | ~1,500,000 |
+| restaurant_reviews | ~75,000 |
+| delivery_partner_reviews | ~40,000 |
 
-### Stage A2 — Simple deterministic automation
-Before AI is introduced:
-- parameterized/scripted data generation;
-- reusable SQL/templates;
-- configurable row counts;
-- repeatable validation;
-- repeatable test scenarios;
-- scripted execution.
+Approximately 2.9M relational rows.
 
-Purpose: learn how ordinary engineering automation scales a process that is already understood.
+The large dataset is deliberately **not** created immediately after Azure SQL provisioning.
 
-### Stage B — AI-assisted automation
-Scale toward the ~15,000-order dataset.
-
-AI may assist with:
-- repetitive data-generation code;
-- SQL;
-- validation queries;
-- scaling;
-- test-case generation;
-- documentation.
-
-Human remains responsible for architecture, review, validation, execution approval, and diagnosis.
-
-### Stage C — Governed agentic workflows
-Specialized agents are planned for:
-- Data;
-- Ingestion;
-- Curation/Transformation/Analytics;
-- Monitoring/Reporting;
-- Prediction/ML/Analytics.
-
-Agents must have bounded planning, tool use, validation, bounded retry, reporting, and human governance.
-
-## 7. Controlled data-quality scenarios — LOCKED
+## 9. Controlled data-quality scenarios — LOCKED
 
 Examples:
 - DELIVERY + NULL `delivery_partner_id`
@@ -160,7 +217,7 @@ Examples:
 - unknown restaurant ID
 - other documented business-rule violations
 
-## 8. Analytics — LOCKED
+## 10. Analytics — LOCKED
 
 Monthly historical rating aggregation:
 - restaurant average rating and review count;
@@ -172,24 +229,21 @@ Order lifecycle analytics distinguish:
 - customer cancellations;
 - payment-failure cancellations.
 
-## 9. Databricks / storage decision
+## 11. Databricks / storage decision
 
 Current environment is Databricks Free Edition. The project uses Databricks-managed storage/managed volumes/managed Delta tables for this environment because the attempted direct Azure Storage integration encountered Free Edition authentication/configuration limitations.
 
-Direct Azure SQL/JDBC remains a separate integration pattern to verify.
+Direct Azure SQL/JDBC remains a separate integration pattern.
 
-## 10. Next implementation step
+## 12. Current next implementation step
 
-Verify current Azure SQL pricing/free allowances before provisioning.
+**Create and validate the locked 10-table Azure SQL schema.**
 
-Then:
-1. choose the smallest suitable Azure SQL configuration;
-2. provision Azure SQL;
-3. execute Stage A manually;
-4. implement Stage A2 deterministic automation;
-5. move to Stage B AI-assisted scaling;
-6. implement SQL → Bronze → Silver → Gold flows and downstream orchestration/performance work.
+After schema creation:
 
-## Current master checkpoint
-
-`FOODFLOW-2026-09-25-PHASE3-PHYSICAL-DESIGN-AI-AUTOMATION-LINEAGE-LOCKED`
+1. populate Stage A;
+2. validate relationships and business rules;
+3. verify JDBC;
+4. implement SQL → Bronze;
+5. implement Bronze → Silver;
+6. validate the ingestion and data-quality patterns.
