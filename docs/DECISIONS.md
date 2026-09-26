@@ -1,10 +1,10 @@
-# westeros-foodflow — Engineering Decisions
+# FoodFlow Engineering Decisions
 
 ## Decision 001 — Use Databricks Free Edition for Initial Learning
 
 **Status:** Accepted
 
-Databricks Free Edition is used for the initial westeros-foodflow implementation.
+Databricks Free Edition is used for the initial FoodFlow implementation.
 
 Azure ADLS integration is deferred until the project reaches the appropriate Azure infrastructure phase.
 
@@ -26,7 +26,7 @@ External ADLS and AWS S3 storage will be introduced later as part of the multi-c
 
 Python dependencies are isolated in the project-local `.venv`.
 
-This keeps the westeros-foodflow development environment reproducible and prevents global package conflicts.
+This keeps the FoodFlow development environment reproducible and prevents global package conflicts.
 
 ---
 
@@ -130,7 +130,7 @@ The migration was validated after execution.
 
 Gold aggregate tables are derived state.
 
-For the current westeros-foodflow design, Gold is recomputed and overwritten from Silver after incremental changes.
+For the current FoodFlow design, Gold is recomputed and overwritten from Silver after incremental changes.
 
 Silver uses `MERGE` because it represents current row-level entities.
 
@@ -187,115 +187,46 @@ The Python notebook and the corresponding DBC backup are maintained together for
 
 ---
 
-## Decision 012 — Project and Azure SQL Resource Naming
+# Phase 3A Decisions — 2026-09-26
 
-**Status:** Accepted
+## Decision 012 — Standard Bronze source metadata
 
-The project/repository name is:
+**Status:** Accepted / Locked
 
-```text
-westeros-foodflow
-```
+Every Bronze table uses `_ingested_at`, `_ingestion_date`, `_source_system`, `_source_file`, and `_batch_id`. SQL/JDBC uses `azure_sql` and NULL `_source_file`.
 
-Phase 3 Azure resource naming uses:
+## Decision 013 — Preserve existing Bronze source history
 
-```text
-rg-westeros-foodflow-dev
-sql-westeros-foodflow-dev
-westeros-foodflow
-```
+**Status:** Accepted / Locked
 
-Existing executed Databricks objects are not renamed solely for documentation consistency when doing so would alter historical lineage.
+The existing `restaurants` Bronze history is not overwritten. SQL reconciliation uses explicit `restaurant_id` matching. Historical `_source_file` lineage remains explainable.
 
----
+## Decision 014 — Explicit table-existence guard for first-load Bronze tables
 
-## Decision 013 — Phase 3 Dataset Implementation Sequence
+**Status:** Accepted / Locked
 
-**Status:** Accepted
+Before a first-load write, check `spark.catalog.tableExists()`. Stop rather than overwrite an existing table. Do not rely on unsupported `errorifexists`.
 
-The relational dataset is implemented progressively:
+## Decision 015 — No fabricated SQL file lineage
 
-```text
-Azure SQL
-   ↓
-Create schema
-   ↓
-Stage A — 10 restaurants / 100 customers / 500 orders
-   ↓
-Relationship + business-rule validation
-   ↓
-JDBC connectivity
-   ↓
-SQL → Bronze
-   ↓
-Bronze → Silver
-   ↓
-Stage A2 — deterministic scaling to 5K
-   ↓
-Stage B — AI-assisted generation to ~15K
-   ↓
-ADF
-   ↓
-250K orders / ~2.9M relational rows
-```
+**Status:** Accepted / Locked
 
-The large 250K-order dataset is deliberately deferred until the ADF phase.
+JDBC ingestion has no source file. `_source_file` remains NULL.
 
----
+## Decision 016 — Treat Serverless/firewall failures as operational dependencies
 
-## Decision 014 — Azure SQL as a Separate Relational Integration Pattern
+**Status:** Accepted / Locked
 
-**Status:** Accepted
+Azure SQL Serverless auto-resume and changing Databricks egress IPs can cause transient connectivity failures. Diagnose these separately from authentication, schema, and data errors. Do not enable broad Azure-services access as a shortcut.
 
-Azure SQL is introduced as a separate source-system integration pattern from the Databricks-managed storage used in the current Free Edition environment.
+## Decision 017 — Explicit Silver canonicalization gate
 
-The initial SQL ingestion pattern is JDBC-based and uses SQL-specific ingestion metadata:
+**Status:** Accepted / Locked
 
-- `_ingested_at`
-- `_ingestion_date`
-- `_source_system`
-- `_batch_id`
+Before Bronze → Silver, define source precedence/canonicalization for mixed-source Bronze data, especially `restaurants`.
 
-The CSV-specific `_source_file` field is not required for SQL ingestion.
+## Decision 018 — Stage progression remains locked
 
----
+**Status:** Accepted / Locked
 
-## Decision 015 — Watermark-based Incremental SQL Extraction Before CDC
-
-**Status:** Accepted
-
-The initial incremental SQL pattern uses `updated_at` watermarks:
-
-```sql
-SELECT *
-FROM dbo.orders
-WHERE updated_at > @last_watermark
-  AND updated_at <= @current_watermark;
-```
-
-This captures inserts and updates but does not capture hard deletes.
-
-The project will later compare this pattern with soft deletes, Change Tracking, and CDC.
-
----
-
-## Decision 016 — Large Dataset Deferred to ADF Phase
-
-**Status:** Accepted
-
-The eventual large relational dataset is:
-
-- customers: 25,000
-- restaurants: 500
-- menu_items: 15,000
-- delivery_partners: 1,000
-- orders: 250,000
-- order_items: ~750,000
-- payments: ~250,000
-- order_status_history: ~1,500,000
-- restaurant_reviews: ~75,000
-- delivery_partner_reviews: ~40,000
-
-Approximately 2.9 million relational rows are expected.
-
-This dataset is not created immediately after Azure SQL provisioning. It is introduced during the ADF learning/implementation phase.
+Stage A → deterministic ~5K → AI-assisted ~15K → ADF → 250K workload. Do not jump directly to the 250K dataset or introduce AI before the deterministic stage.

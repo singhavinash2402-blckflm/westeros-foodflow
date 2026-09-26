@@ -1,15 +1,17 @@
-# westeros-foodflow — Learning Roadmap
+# FoodFlow — Learning Roadmap
 
 ## Learning Philosophy
 
-The project follows a build-first learning approach:
+FoodFlow follows a build-first learning approach.
+
+For each technology:
 
 ```text
 Concept
    ↓
 Small manual exercise
    ↓
-Realistic implementation
+Realistic FoodFlow implementation
    ↓
 Failure / edge cases
    ↓
@@ -17,25 +19,24 @@ Testing
    ↓
 Optimization
    ↓
-Deterministic automation
+Automation
    ↓
 AI assistance
-   ↓
-Governed agentic workflows
 ```
 
 AI is used to accelerate repetitive work only after the underlying engineering concepts are understood.
 
 ---
 
-## Completed foundations
+## Roadmap
 
 ### Foundation
 
 - [x] Python installation
 - [x] Project-local Python virtual environment
 - [x] VS Code Python interpreter configuration
-- [x] Git installation/configuration
+- [x] Git installation
+- [x] Git configuration
 - [x] Git repository initialization
 - [x] `.gitignore`
 
@@ -53,61 +54,30 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [x] Delta history
 - [x] Execution plan analysis
 
-### Incremental CSV
+### Incremental Processing — Current
 
-- [x] Multiple source batches
-- [x] New records
-- [x] Updated records
-- [x] Duplicate records
-- [x] Deduplication
-- [x] Business keys
-- [x] Delta `MERGE`
-- [x] Idempotency
-- [x] Batch/audit columns
-- [x] Historical metadata backfill
-- [x] Validation
-- [x] Delta history
+- [ ] Second source file
+- [ ] New records
+- [ ] Updated records
+- [ ] Duplicate records
+- [ ] Deduplication
+- [ ] Business keys
+- [ ] Delta `MERGE`
+- [ ] Idempotency
+- [ ] Batch/audit columns
+- [ ] Validation
+- [ ] Delta history after incremental processing
 
----
+### Relational Data
 
-# Current — Relational SQL
+- [ ] SQL Server / Azure SQL
+- [ ] Source table design
+- [ ] Full ingestion
+- [ ] Watermarking
+- [ ] Incremental ingestion
+- [ ] Incremental validation
 
-## Stage 3A
-
-- [x] Azure SQL resource group
-- [x] Azure SQL logical server
-- [x] Azure SQL database
-- [x] Free Offer configuration
-- [ ] 10-table relational schema
-- [ ] Stage A dataset
-- [ ] Relationship validation
-- [ ] Business-rule validation
-- [ ] JDBC connectivity
-- [ ] SQL → Bronze
-- [ ] Bronze → Silver
-- [ ] SQL watermark extraction
-- [ ] Lower/upper watermark boundary testing
-
-## Stage A2 — Deterministic scaling
-
-- [ ] Parameterized data generation
-- [ ] Repeatable validation
-- [ ] Repeatable test scenarios
-- [ ] 5K dataset
-- [ ] Scale validation
-
-## Stage B — AI-assisted generation
-
-- [ ] AI-assisted repetitive generation
-- [ ] Human review/approval
-- [ ] ~15K dataset
-- [ ] ~60-day order activity
-- [ ] Scale validation
-- [ ] Document AI assistance
-
----
-
-# Future — Azure Data Factory
+### Azure Data Factory
 
 - [ ] Linked services
 - [ ] Datasets
@@ -122,27 +92,16 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Monitoring
 - [ ] Databricks orchestration
 
-## Large-scale dataset
-
-- [ ] 250K orders
-- [ ] ~2.9M relational rows
-- [ ] ADF ingestion/orchestration against the large dataset
-
----
-
-# Future — CDC
+### CDC
 
 - [ ] Insert handling
 - [ ] Update handling
 - [ ] Delete handling
-- [ ] Watermark versus Change Tracking
-- [ ] Watermark versus CDC
+- [ ] CDC versus watermarking
 - [ ] CDC to Delta
-- [ ] MERGE-based CDC processing
+- [ ] MERGE-based processing
 
----
-
-# Future — Cloud Storage
+### Cloud Storage
 
 - [ ] ADLS Gen2
 - [ ] Azure RBAC
@@ -152,9 +111,7 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] AWS IAM
 - [ ] Multi-cloud ingestion
 
----
-
-# Future — APIs and JSON
+### APIs
 
 - [ ] REST API fundamentals
 - [ ] Authentication
@@ -165,9 +122,7 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Schema evolution
 - [ ] Incremental API ingestion
 
----
-
-# Future — dbt and Modeling
+### dbt and Modeling
 
 - [ ] dbt setup
 - [ ] Staging models
@@ -182,9 +137,7 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] SCD Type 1
 - [ ] SCD Type 2
 
----
-
-# Future — Streaming
+### Streaming
 
 - [ ] Event Hubs
 - [ ] Structured Streaming
@@ -200,9 +153,23 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Deduplication
 - [ ] Kafka concepts
 
----
+### Airflow
 
-# Future — Production Engineering
+- [ ] Local Airflow
+- [ ] DAGs
+- [ ] Tasks
+- [ ] Dependencies
+- [ ] Scheduling
+- [ ] Sensors
+- [ ] Retries
+- [ ] Backfills
+- [ ] Parameters
+- [ ] Connections
+- [ ] Variables
+- [ ] Databricks orchestration
+- [ ] Monitoring
+
+### Production Engineering
 
 - [ ] Data quality
 - [ ] Data contracts
@@ -219,29 +186,33 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] CI/CD
 - [ ] Power BI
 
+### AI / Agentic AI
+
+- [ ] SQL assistant
+- [ ] PySpark assistant
+- [ ] Data-quality assistant
+- [ ] Pipeline documentation assistant
+- [ ] Operational data-engineering agent
+- [ ] Agent for pipeline/log/DQ diagnosis
+- [ ] AI-generated remediation recommendations
+
+
 ---
 
-# AI / Agentic AI progression
+# Phase 3A Learning Sequence Addendum — 2026-09-26
 
-## AI-assisted automation
+```text
+Stage A: manual/deterministic small process
+        ↓
+Bronze → Silver understanding and validation
+        ↓
+Stage A2: deterministic ~5K scaling
+        ↓
+Stage B: AI-assisted ~15K scaling
+        ↓
+ADF/orchestration
+        ↓
+250K relational workload
+```
 
-- [ ] SQL generation assistance
-- [ ] PySpark generation assistance
-- [ ] Synthetic data generation assistance
-- [ ] Data-quality test generation
-- [ ] Documentation assistance
-- [ ] Validation assistance
-
-## Governed agentic workflows
-
-- [ ] Data Agent
-- [ ] Ingestion Agent
-- [ ] Curation/Transformation/Analytics Agent
-- [ ] Monitoring/Reporting Agent
-- [ ] Prediction/ML/Analytics Agent
-- [ ] Tool permission boundaries
-- [ ] Planning constraints
-- [ ] Validation gates
-- [ ] Bounded retry/recovery
-- [ ] Human approval
-- [ ] Audit/reporting
+The project will not use AI-assisted generation as a substitute for understanding the small deterministic process.

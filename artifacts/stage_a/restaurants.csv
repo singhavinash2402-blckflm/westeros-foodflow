@@ -1,0 +1,11 @@
+restaurant_id,restaurant_name,city,state,country,address,cuisine,opening_date,phone,rating,created_at,updated_at,is_active
+REST-SHJ-001,Sharjah Kitchen 01,Sharjah,Sharjah,UAE,"11 Food Street, Sharjah",North Indian,2026-02-05,+91-9000000001,3.5,2026-02-01 00:00:00,2026-02-01 00:00:00,True
+REST-DEL-002,Delhi Kitchen 02,Delhi,Delhi,India,"22 Food Street, Delhi",South Indian,2026-02-12,+91-9000000002,3.42,2026-02-04 00:00:00,2026-02-04 00:00:00,True
+REST-BLR-003,Bengaluru Kitchen 03,Bengaluru,Karnataka,India,"33 Food Street, Bengaluru",Chinese,2026-02-19,+91-9000000003,3.72,2026-02-07 00:00:00,2026-02-07 00:00:00,True
+REST-MUM-004,Mumbai Kitchen 04,Mumbai,Maharashtra,India,"44 Food Street, Mumbai",Italian,2026-02-26,+91-9000000004,4.11,2026-02-10 00:00:00,2026-02-10 00:00:00,True
+REST-HYD-005,Hyderabad Kitchen 05,Hyderabad,Telangana,India,"55 Food Street, Hyderabad",Continental,2026-03-05,+91-9000000005,3.66,2026-02-13 00:00:00,2026-02-13 00:00:00,True
+REST-SHJ-006,Sharjah Kitchen 06,Sharjah,Sharjah,UAE,"66 Food Street, Sharjah",Mughlai,2026-03-12,+91-9000000006,3.45,2026-02-16 00:00:00,2026-02-16 00:00:00,True
+REST-DEL-007,Delhi Kitchen 07,Delhi,Delhi,India,"77 Food Street, Delhi",Biryani,2026-03-19,+91-9000000007,3.92,2026-02-19 00:00:00,2026-02-19 00:00:00,True
+REST-BLR-008,Bengaluru Kitchen 08,Bengaluru,Karnataka,India,"88 Food Street, Bengaluru",Street Food,2026-03-26,+91-9000000008,4.48,2026-02-22 00:00:00,2026-02-22 00:00:00,True
+REST-MUM-009,Mumbai Kitchen 09,Mumbai,Maharashtra,India,"99 Food Street, Mumbai",Cafe,2026-04-02,+91-9000000009,4.6,2026-02-25 00:00:00,2026-02-25 00:00:00,True
+REST-HYD-010,Hyderabad Kitchen 10,Hyderabad,Telangana,India,"110 Food Street, Hyderabad",Asian,2026-04-09,+91-9000000010,3.58,2026-02-28 00:00:00,2026-02-28 00:00:00,True

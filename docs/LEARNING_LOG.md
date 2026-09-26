@@ -1,8 +1,8 @@
-# westeros-foodflow — Learning Log
+# FoodFlow Learning Log
 
 ## 2026-09-24 — Project Foundation
 
-Established the westeros-foodflow project repository and development environment.
+Established the FoodFlow project repository and development environment.
 
 ### Topics covered
 
@@ -128,70 +128,22 @@ Historical Databricks volume filenames from the earlier exercise are intentional
 
 ---
 
-## 2026-09-25 — Phase 3 Relational SQL Design and Azure SQL Foundation
+# 2026-09-26 — SQL → Bronze learning checkpoint
 
-Phase 3 introduced the relational source-system learning path.
+## Lessons learned
 
-### Concepts locked
+- JDBC makes Azure SQL a direct relational source for Databricks.
+- Azure SQL Serverless can create transient resume-time availability failures.
+- Databricks Free Edition public egress IP changes can independently cause SQL firewall failures.
+- Source system and source file are different lineage concepts. SQL/JDBC has no source file, so `_source_file` must remain NULL.
+- Existing Bronze source history must be preserved rather than blindly overwritten.
+- First-load safety is best expressed as an explicit table-existence guard plus source/Bronze count validation.
+- Bronze can contain multiple source histories; Silver needs an explicit canonicalization/source-precedence decision.
 
-- Relational entity modeling
-- Primary and foreign keys
-- Business keys versus surrogate keys
-- Transactional versus derived data
-- Historical transaction snapshots
-- Order lifecycle modeling
-- Review/event history
-- Watermark-based incremental extraction
-- SQL source metadata
-- Controlled data-quality scenarios
+## Current result
 
-### Relational model
+All ten Stage A SQL tables are loaded into Bronze. The special `restaurants` table retains its 9 historical CSV-only rows in addition to 10 SQL-originated rows.
 
-The source model contains ten tables:
+## Next learning target
 
-- `customers`
-- `restaurants`
-- `menu_items`
-- `orders`
-- `order_items`
-- `payments`
-- `delivery_partners`
-- `order_status_history`
-- `restaurant_reviews`
-- `delivery_partner_reviews`
-
-### Dataset learning progression
-
-The project intentionally avoids jumping directly to a large dataset:
-
-```text
-Manual Stage A
-10 restaurants / 100 customers / 500 orders
-        ↓
-Deterministic Stage A2
-5K dataset
-        ↓
-AI-assisted Stage B
-~15K orders
-        ↓
-ADF
-250K orders / ~2.9M relational rows
-```
-
-This progression separates foundational engineering, ordinary automation, AI-assisted automation, and orchestration at meaningful learning boundaries.
-
-### Azure SQL foundation
-
-Provisioned:
-
-- `rg-westeros-foodflow-dev`
-- `sql-westeros-foodflow-dev`
-- `westeros-foodflow`
-
-The database uses the Azure SQL Free Offer with serverless General Purpose / Standard-series (Gen5), 2 vCores, and 32 GB.
-
-### Current state
-
-Azure SQL provisioning is complete.
-
-The next learning step is to create the locked relational schema and manually build the Stage A dataset before introducing JDBC ingestion.
+Design Bronze → Silver canonicalization and validation before implementing transformations.
