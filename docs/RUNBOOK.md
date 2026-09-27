@@ -1,4 +1,4 @@
-# FoodFlow — Runbook
+# westeros-foodflow — Runbook
 
 ## 1. Purpose
 
@@ -371,3 +371,40 @@ Do not enable broad Azure-services access as a troubleshooting shortcut.
 ## Bronze → Silver gate
 
 Before Silver code, define source precedence, canonicalization, lineage preservation, and relationship/data-quality rules for mixed-source Bronze tables.
+
+
+---
+
+## 2026-09-26 — Current Phase 3 resume point
+
+### Phase 3 state
+
+```text
+3A SQL Foundation       COMPLETE
+3B Stage A              COMPLETE
+3C JDBC                 COMPLETE
+3D SQL → Landing→Bronze COMPLETE
+3E Bronze → Silver      CURRENT
+```
+
+### 3E operating rule
+
+The Silver architecture is already locked. Do not redefine source precedence, canonicalization, DQ, relationship handling, replay semantics, or layer boundaries during implementation unless concrete evidence proves a defect.
+
+The implementation should proceed table-by-table using the locked Silver decisions and validate:
+
+- canonical identity
+- deduplication
+- source conflict resolution
+- business/relationship/schema DQ
+- current-state vs event semantics
+- late-arriving records
+- idempotent replay
+- lineage
+- processing metrics
+
+Reference checkpoint: `docs/project/checkpoints/MASTER-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED.md`.
+
+### Superseded 3E preparation wording
+
+Earlier runbook text that says Silver source precedence/canonicalization must first be defined is superseded. Those architecture rules were locked on 2026-09-26; the remaining task is implementation and validation.

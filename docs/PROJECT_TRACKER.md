@@ -27,11 +27,11 @@ Governed agentic workflows
 | Phase 2 | Incremental CSV | ✅ Complete / merged |
 | Phase 3 | Relational SQL | 🔵 Current |
 | 3A | SQL Foundation + Stage A + JDBC + SQL→Bronze | 🟢 Complete through Bronze |
-| 3A-Silver | Bronze → Silver | 🔵 Next |
-| 3A2 | Deterministic ~5K | ⏳ Future |
-| 3B | AI-assisted ~15K | ⏳ Future |
-| 4 | Azure Data Factory / orchestration | ⏳ Future |
-| 4D | 250K-order workload | ⏳ Future |
+| 3E | Bronze → Silver | 🔴 Current / blocked — resume implementation |
+| 3F | Deterministic ~5K | ⏳ Future |
+| 3G | AI-assisted ~15K | ⏳ Future |
+| 3H | Azure Data Factory / orchestration | ⏳ Future |
+| 3I | 250K-order workload | ⏳ Future |
 | 5 | Advanced data engineering | ⏳ Future |
 | 6 | APIs / JSON | ⏳ Future |
 | 7 | dbt + dimensional modeling | ⏳ Future |
@@ -101,26 +101,57 @@ First-load tables require an explicit `spark.catalog.tableExists()` guard. Sourc
 - Do not use broad Azure-services access as a shortcut.
 - Add explicit JDBC retry/resiliency settings to the maintained implementation.
 
-## Next controlled sequence
+## Current resume point — 3E
+
+The Silver architecture and implementation rules are already locked. Do not reopen or redefine source precedence/canonicalization before implementation.
 
 ```text
-Bronze validation
+Existing 3D Bronze
       ↓
-Define Silver source precedence/canonicalization
+3E — Bronze → Silver
       ↓
-Bronze → Silver
+Table-by-table implementation of locked Silver contract
       ↓
-Silver DQ + relationship validation
+Silver validation / idempotency / lineage / observability
       ↓
-Stage A2 deterministic ~5K
+3F — deterministic ~5K
       ↓
-Stage B AI-assisted ~15K
+3G — AI-assisted ~15K
       ↓
-ADF
+3H — ADF introduction
       ↓
-250K workload
+3I — 250K workload
 ```
+
+### 3E implementation gates
+
+- [ ] Map the locked Silver contract to all 10 entities
+- [ ] Implement canonical identity and deduplication
+- [ ] Implement evidence-based source conflict resolution
+- [ ] Implement business/relationship/schema DQ handling
+- [ ] Implement current-state/event-specific write semantics
+- [ ] Implement late-arriving and unresolved-parent handling
+- [ ] Implement idempotent replay behavior
+- [ ] Preserve lineage from Silver → Bronze → Landing
+- [ ] Record Control Plane processing metrics
+- [ ] Validate Silver outputs and reruns
+- [ ] Create 3E completion checkpoint
 
 ## Documentation gate
 
 Every completed meaningful stage must update the plan, tracker, progress, learning log, affected architecture/data dictionary/decisions/runbook/AI roadmap, and the relevant checkpoint before the agreed Git checkpoint is considered complete.
+
+
+## Architecture checkpoint — 2026-09-26
+
+**Authoritative checkpoint:** `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED`
+
+Locked architecture:
+
+```text
+Landing → Bronze → Silver → Gold
+
+Control / Observability / Orchestration
+```
+
+Silver Decisions 6–22, Gold Decisions 23–33, and Control Plane/Orchestration Decisions 34–43 are locked. The checkpoint was created because the first 3E implementation exposed source provenance/source-resolution problems. Earlier Phase 3 stages 3A–3D are complete and must not be repeated.

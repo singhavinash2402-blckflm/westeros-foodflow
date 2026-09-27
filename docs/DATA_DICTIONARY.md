@@ -1,4 +1,4 @@
-# FoodFlow Data Dictionary
+# westeros-foodflow Data Dictionary
 
 ## Purpose
 
@@ -617,3 +617,22 @@ WHERE updated_at > @last_watermark
 ```
 
 Lower boundary is exclusive; upper boundary is inclusive. The pattern captures inserts/updates represented by `updated_at`, not hard deletes.
+
+
+---
+
+## 2026-09-26 — Multi-source Silver contract transition
+
+The original restaurant Silver examples in this document describe the earlier single-source CSV learning exercise and are retained as historical implementation context.
+
+The authoritative Phase 3 multi-source Silver contract is now defined by `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED` and Silver Decisions S-06 through S-22.
+
+During 3E implementation, table-level canonical schemas, business keys, record identity, DQ fields, source provenance, and current-state/event behavior will be documented here as they become executable. This prevents the data dictionary from claiming a final Silver physical schema before 3E is implemented.
+
+Current authoritative relationship:
+
+```text
+Landing → Bronze → Silver → Gold
+```
+
+Bronze preserves source evidence. Silver defines canonical business state. Gold defines analytical consumption grain.

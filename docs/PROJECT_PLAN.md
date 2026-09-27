@@ -1,8 +1,8 @@
-# FoodFlow — Project Plan
+# westeros-foodflow — Project Plan
 
 ## 1. Project Overview
 
-FoodFlow is a hands-on, end-to-end data engineering learning project designed to simulate a production-style modern data platform.
+westeros-foodflow is a hands-on, end-to-end data engineering learning project designed to simulate a production-style modern data platform.
 
 The project will progressively integrate batch ingestion, databases, cloud storage, distributed processing, Delta Lake, orchestration, streaming, data quality, security, testing, CI/CD, analytics, and AI-assisted data engineering.
 
@@ -12,7 +12,7 @@ The goal is not only to build the platform, but to understand the engineering co
 
 ## 2. Primary Learning Objectives
 
-FoodFlow will provide practical experience with:
+westeros-foodflow will provide practical experience with:
 
 - Python
 - SQL
@@ -115,7 +115,7 @@ Cross-cutting capabilities:
 
 ## 4. Development Strategy
 
-FoodFlow will follow a progressive learning approach:
+westeros-foodflow will follow a progressive learning approach:
 
 1. Learn the concept.
 2. Implement a small example manually.
@@ -379,4 +379,24 @@ Azure SQL General Purpose Serverless may auto-pause/resume and produce transient
 
 ## Next task
 
-Bronze → Silver. Before coding, define canonical/source-precedence behavior for mixed-source Bronze data, especially `restaurants`, so Silver becomes explainable canonical business state without silently destroying historical lineage.
+Bronze → Silver. The canonical/source-resolution contract is already locked by the 2026-09-26 architecture checkpoint. Implementation now translates those locked rules into executable Silver processing without silently destroying historical lineage.
+
+
+## 2026-09-26 authoritative Phase 3 state
+
+Phase 3 is complete through **3D — SQL → Landing → Bronze**. The current implementation point is **3E — Bronze → Silver**.
+
+The first 3E implementation exposed source metadata/provenance contamination in mixed-source Bronze data. The project deliberately paused implementation and completed an architecture review rather than applying a narrow patch.
+
+The resulting architecture is locked as:
+
+```text
+Landing → Bronze → Silver → Gold
+Control / Observability / Orchestration
+```
+
+Silver Decisions 6–22, Gold Decisions 23–33, and Control Plane/Orchestration Decisions 34–43 are authoritative. No redesign is required before 3E implementation.
+
+### 3E resume rule
+
+Implement the locked Silver contract against the existing 3D Bronze data. Reopen an architecture decision only if concrete implementation evidence demonstrates a defect or contradiction.

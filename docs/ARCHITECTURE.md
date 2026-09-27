@@ -1,8 +1,8 @@
-# FoodFlow — Architecture
+# westeros-foodflow — Architecture
 
 ## 1. Architecture Overview
 
-FoodFlow is designed as a modern data engineering platform using a layered Medallion architecture.
+westeros-foodflow is designed as a modern data engineering platform using a layered Medallion architecture.
 
 The initial implementation is being developed in Databricks Free Edition. Cloud-native storage, orchestration, streaming, and multi-cloud capabilities will be introduced progressively.
 
@@ -365,3 +365,73 @@ Existing Bronze `restaurants` is reconciled using `restaurant_id`. Historical `_
 ## Reliability
 
 Azure SQL Serverless auto-resume and Databricks Free Edition egress-IP changes are operational concerns distinct from data transformations. The architecture must retain explicit retry and firewall diagnostics rather than using broad network access as a workaround.
+
+
+---
+
+# 2026-09-26 — Authoritative Layer Architecture
+
+The following contract supersedes earlier ambiguity about direct SQL → Bronze → Silver processing. Historical architecture remains documented for learning lineage, but this is the current authoritative design.
+
+## Layer responsibilities
+
+```text
+Landing → Bronze → Silver → Gold
+                         ↓
+                   BI / Analytics / ML
+
+Control / Observability / Orchestration
+```
+
+### Landing
+
+Exact source-faithful immutable artifacts. CSV/JSON/Parquet remain in their source format. Database extracts are immutable Parquet artifacts. Landing does not perform DQ, deduplication, source resolution, or business logic.
+
+Physical organization:
+
+```text
+landing/<entity>/<source_system>/<ingestion_date>/<source_artifact>
+```
+
+### Bronze
+
+Source-faithful records plus minimal technical audit/provenance metadata:
+
+```text
+_source_path
+_ingested_at
+_ingestion_date
+_batch_id
+```
+
+Bronze preserves evidence and technical DQ observations. It does not perform canonicalization, business DQ, source conflict resolution, relationship validation, latest-state selection, or business transformations.
+
+### Silver
+
+Silver is the canonical, integrated, business-aware layer. It owns controlled canonical schema, type normalization, deduplication, canonical identity, source conflict resolution, business/relationship DQ, late-arriving data handling, current-state/event semantics, replay/idempotency, record hashing, and lineage.
+
+Silver is entity/domain-oriented and source-neutral.
+
+### Gold
+
+Gold is business-facing analytical consumption using dimensions, facts, and marts. Every fact/mart has an explicitly documented grain. Gold is not another cleansing layer and is not a duplicate of Silver.
+
+### Control Plane
+
+The Control Plane owns operational metadata: runs, batches, extraction/processing state, watermarks, counts, quality metrics, errors, retries, reconciliation, and observability. It does not own business/source payload.
+
+## Locked architecture decisions
+
+- Silver Decisions 6–22
+- Gold Decisions 23–33
+- Control Plane/Orchestration Decisions 34–43
+
+See `docs/project/checkpoints/MASTER-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED.md` for the complete authoritative checkpoint.
+
+## Current implementation point
+
+Phase 3 is complete through 3D. Stage 3E — Bronze → Silver is the current implementation point.
+
+The first 3E attempt exposed source provenance/source-resolution contamination. The architecture was revisited deliberately; the next 3E implementation must follow the locked contracts rather than introduce new architecture by accident.
+
+ADF-specific implementation architecture is intentionally not locked yet. ADF will be learned and introduced at 3H. Airflow remains the later primary orchestrator.

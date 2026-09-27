@@ -1,4 +1,4 @@
-# FoodFlow Learning Log
+# westeros-foodflow Learning Log
 
 ## 2026-09-24 — Project Foundation
 
@@ -147,3 +147,32 @@ All ten Stage A SQL tables are loaded into Bronze. The special `restaurants` tab
 ## Next learning target
 
 Design Bronze → Silver canonicalization and validation before implementing transformations.
+
+
+---
+
+## 2026-09-26 — Bronze → Silver architecture lesson
+
+The first 3E implementation exposed an important distinction: **preserving source evidence is not the same as defining canonical business state**.
+
+Bronze preserves source records and technical provenance. Silver interprets that evidence using explicit identity, deduplication, source conflict resolution, DQ, relationship, versioning, late-arrival, replay, and lineage rules.
+
+The `restaurants` Bronze evidence demonstrated why source metadata must not be mixed or overwritten during cross-source processing. The project therefore paused implementation and locked the layer contracts before continuing 3E.
+
+### Current learning sequence
+
+```text
+Understand manually
+      ↓
+Implement deterministically
+      ↓
+Validate correctness/idempotency
+      ↓
+Automate repetitive work
+      ↓
+AI-assisted automation
+      ↓
+Governed agentic workflows
+```
+
+ADF and agentic automation remain later learning stages.

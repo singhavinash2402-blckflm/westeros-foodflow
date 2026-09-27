@@ -1,249 +1,115 @@
-# westeros-foodflow Phase 3 Checkpoint — Relational SQL Source
+# westeros-foodflow Phase 3 Checkpoint — Relational SQL
 
-**Status:** Stage 3A in progress — Azure SQL provisioned; schema creation next
-**Current master checkpoint:** `FOODFLOW-2026-09-25-PHASE3-PHYSICAL-DESIGN-AI-AUTOMATION-LINEAGE-LOCKED`
+**Checkpoint ID:** `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED`
+**Date:** 2026-09-26
+**Phase:** Phase 3 — Relational SQL
+**Current implementation point:** **Stage 3E — Bronze → Silver**
 
-## 1. Relational domain — LOCKED
+## 1. Phase 3 status
 
-Tables:
-1. `customers`
-2. `restaurants`
-3. `menu_items`
-4. `orders`
-5. `order_items`
-6. `payments`
-7. `delivery_partners`
-8. `order_status_history`
-9. `restaurant_reviews`
-10. `delivery_partner_reviews`
+| Stage | Status |
+|---|---|
+| 3A — SQL Foundation | ✅ Complete |
+| 3B — Stage A dataset | ✅ Complete |
+| 3C — JDBC connectivity | ✅ Complete |
+| 3D — SQL → Landing → Bronze | ✅ Complete |
+| 3E — Bronze → Silver | 🔴 Current / blocked |
+| Architecture review | ✅ Complete / locked |
 
-Restaurant IDs use business identifiers such as:
-- `REST-SHJ-001`
-- `REST-SHJ-002`
-- `REST-DEL-001`
-- `REST-BLR-001`
+Do not repeat 3A–3D.
 
-`restaurants.restaurant_id` is the business PK and is `VARCHAR(20)`.
+## 2. Why 3E was blocked
 
-## 2. Physical design — LOCKED
+The first Bronze → Silver implementation exposed a source provenance/source-resolution problem in mixed-source Bronze data. In `restaurants`, SQL ingestion metadata could coexist with an older CSV `_source_file`, demonstrating metadata contamination/overwriting during processing.
 
-- Transactional/entity PKs: `BIGINT IDENTITY`.
-- `restaurants.restaurant_id`: `VARCHAR(20)` business PK.
-- `menu_items.menu_item_id`: globally unique `BIGINT IDENTITY` sole PK.
-- `menu_items.restaurant_id`: FK to `restaurants`.
-- `order_items.menu_item_id`: FK to `menu_items` only.
-- No composite menu-item PK.
-- Operational timestamps: `DATETIME2(3)`.
-- Order/payment totals: `DECIMAL(12,2)`.
-- Menu/unit prices: `DECIMAL(10,2)`.
-- Boolean flags: `BIT`.
-- PK/FK/domain/access-pattern constraints and indexes are part of the design.
-- `created_at` / `updated_at` are used where appropriate.
-- No CDC initially.
+The project deliberately paused implementation and revisited the architecture rather than applying a narrow Silver merge patch.
 
-## 3. Order design
-
-`order_type`:
-- `DINE_IN`
-- `TAKE_AWAY`
-- `DELIVERY`
-
-Order lifecycle:
-- `PLACED`
-- `CONFIRMED`
-- `PREPARING`
-- `READY_FOR_PICKUP`
-- `PICKED_UP`
-- `ON_THE_WAY`
-- `DELIVERED`
-- `CANCELLED_BY_CUSTOMER`
-- `CANCELLED_PAYMENT_FAILURE`
-
-## 4. Incremental SQL ingestion — LOCKED
-
-Full load:
-
-```sql
-SELECT * FROM dbo.orders;
-```
-
-Watermark pattern:
-
-```sql
-SELECT *
-FROM dbo.orders
-WHERE updated_at > @last_watermark
-  AND updated_at <= @current_watermark;
-```
-
-Initial watermark ingestion captures inserts/updates but not hard deletes. Boundary testing includes records exactly at the lower and upper watermark timestamps.
-
-Later topics:
-- soft deletes;
-- Change Tracking;
-- CDC;
-- production-grade incremental patterns.
-
-## 5. Azure SQL foundation — COMPLETED
-
-Provisioned:
-
-- Resource group: `rg-westeros-foodflow-dev`
-- SQL server: `sql-westeros-foodflow-dev`
-- Database: `westeros-foodflow`
-- Region: Central India
-- Azure SQL Free Offer
-- General Purpose / Serverless / Standard-series (Gen5)
-- 2 vCores
-- 32 GB
-- Zone redundancy disabled
-- Locally redundant backup storage
-- Overage billing disabled
-- Azure services/resources access disabled
-- Private endpoint none
-- Minimum TLS 1.2
-- Identity not enabled
-- Service-managed TDE
-
-## 6. Dataset implementation sequence — LOCKED
+## 3. Authoritative architecture
 
 ```text
-Azure SQL
-   ↓
-Create schema
-   ↓
-Stage A
-10 restaurants
-100 customers
-500 orders
-   ↓
-Validate relationships
-   ↓
-JDBC connectivity
-   ↓
-SQL → Bronze
-   ↓
-Bronze → Silver
-   ↓
-Stage A2 — deterministic scaling to 5K
-   ↓
-Stage B — AI-assisted generation to ~15K
-   ↓
-ADF
-   ↓
-250K orders / ~2.9M relational rows
+Landing → Bronze → Silver → Gold
+
+Control / Observability / Orchestration
 ```
 
-### Stage A — Manual
+Landing is exact source evidence. Bronze preserves source records plus minimal technical provenance. Silver interprets and resolves evidence into canonical business state. Gold is analytical consumption. The Control Plane owns operational metadata.
 
-Purpose:
-- understand SQL DDL;
-- relationships;
-- data generation;
-- validation;
-- JDBC extraction;
-- Bronze;
-- Silver;
-- data quality.
+## 4. Locked architecture decisions
 
-### Stage A2 — Deterministic automation
+- Silver S-06 through S-22
+- Gold G-23 through G-33
+- Control Plane / Orchestration C-34 through C-43
 
-Purpose:
-- parameterized/scripted data generation;
-- reusable SQL/templates;
-- configurable row counts;
-- repeatable validation;
-- repeatable test scenarios.
+Full definitions are in `docs/DECISIONS.md` and the master checkpoint.
 
-AI is not required for this stage.
+## 5. Silver table behavior
 
-### Stage B — AI-assisted automation
+| Table | Silver behavior |
+|---|---|
+| `customers` | Current-state MERGE; optional history |
+| `restaurants` | Current-state MERGE with evidence-based source conflict resolution; optional history |
+| `menu_items` | Current-state MERGE; optional history |
+| `delivery_partners` | Current-state MERGE; optional history |
+| `orders` | Mutable transactional state; MERGE; status history separate |
+| `order_items` | Transaction detail/relationship; controlled MERGE/upsert |
+| `payments` | Mutable transactional state; MERGE |
+| `order_status_history` | Event/history; append + replay dedup |
+| `restaurant_reviews` | Review identity/chronology-aware |
+| `delivery_partner_reviews` | Review identity/chronology-aware |
 
-Target approximately 15K orders.
+Invalid evidence is retained. Missing parents do not delete children. Late-arriving data is reprocessed when required. Silver processing must be idempotent.
 
-AI may assist with:
-- repetitive data-generation code;
-- SQL;
-- validation queries;
-- scaling;
-- test-case generation;
-- documentation.
+## 6. Next implementation
 
-Human remains responsible for architecture, review, validation, execution approval, and diagnosis.
+The next task is to translate the locked Silver contract into executable processing for the existing 3D Bronze data.
 
-## 7. 15K dataset target — LOCKED
+```text
+Existing Bronze
+      ↓
+canonical identity
+      ↓
+deduplication
+      ↓
+source conflict resolution
+      ↓
+business / relationship / schema DQ
+      ↓
+current-state or event semantics
+      ↓
+idempotent Silver writes
+      ↓
+lineage + observability
+      ↓
+Silver validation
+```
 
-- 5,000 customers
-- 100 restaurants
-- 3,000 menu items
-- 500 delivery partners
-- ~15,000 orders
-- ~2–5 order items per order
-- ~15,000 payments
-- multiple status-history events per applicable order
-- ~1,000 restaurant reviews
-- ~500 delivery-partner reviews
+If implementation evidence demonstrates a genuine architecture defect, stop and document it before changing a locked decision. Otherwise, do not redesign.
 
-Orders represent approximately 60 days of naturally varying activity. Master entities may predate the 60-day order period.
+## 7. Future Phase 3 sequence
 
-## 8. ADF-scale dataset — LOCKED
+```text
+3E Bronze → Silver
+      ↓
+3F deterministic ~5K
+      ↓
+3G AI-assisted ~15K
+      ↓
+3H ADF introduction
+      ↓
+3I ~250K orders
+```
 
-Introduced during the ADF phase:
+Learning sequence:
 
-| Table | Initial records |
-|---|---:|
-| customers | 25,000 |
-| restaurants | 500 |
-| menu_items | 15,000 |
-| delivery_partners | 1,000 |
-| orders | 250,000 |
-| order_items | ~750,000 |
-| payments | ~250,000 |
-| order_status_history | ~1,500,000 |
-| restaurant_reviews | ~75,000 |
-| delivery_partner_reviews | ~40,000 |
+```text
+Understand manually
+→ deterministic automation
+→ AI-assisted automation
+→ governed agentic workflows
+```
 
-Approximately 2.9M relational rows.
+ADF-specific architecture is intentionally not locked yet.
 
-The large dataset is deliberately **not** created immediately after Azure SQL provisioning.
+## 8. Historical checkpoint
 
-## 9. Controlled data-quality scenarios — LOCKED
-
-Examples:
-- DELIVERY + NULL `delivery_partner_id`
-- DINE_IN/TAKE_AWAY + populated delivery partner
-- rating outside 1–5
-- negative quantity
-- unknown restaurant ID
-- other documented business-rule violations
-
-## 10. Analytics — LOCKED
-
-Monthly historical rating aggregation:
-- restaurant average rating and review count;
-- delivery-partner average rating and review count;
-- useful rating distributions/trends.
-
-Order lifecycle analytics distinguish:
-- successful/completed deliveries;
-- customer cancellations;
-- payment-failure cancellations.
-
-## 11. Databricks / storage decision
-
-Current environment is Databricks Free Edition. The project uses Databricks-managed storage/managed volumes/managed Delta tables for this environment because the attempted direct Azure Storage integration encountered Free Edition authentication/configuration limitations.
-
-Direct Azure SQL/JDBC remains a separate integration pattern.
-
-## 12. Current next implementation step
-
-**Create and validate the locked 10-table Azure SQL schema.**
-
-After schema creation:
-
-1. populate Stage A;
-2. validate relationships and business rules;
-3. verify JDBC;
-4. implement SQL → Bronze;
-5. implement Bronze → Silver;
-6. validate the ingestion and data-quality patterns.
+`FOODFLOW-2026-09-26-PHASE3-SQL-BRONZE-COMPLETE.md` remains in the repository as historical evidence of the completed 3D stage and the state before the 3E architecture review. It is superseded for current architecture by this checkpoint; it is not deleted.

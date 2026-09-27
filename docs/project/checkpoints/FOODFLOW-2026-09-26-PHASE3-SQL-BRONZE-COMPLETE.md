@@ -1,3 +1,9 @@
+> **HISTORICAL CHECKPOINT — SUPERSEDED FOR CURRENT ARCHITECTURE**
+>
+> This checkpoint records the completed 3D SQL → Bronze state before the 3E architecture review. The current authoritative checkpoint is `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED`.
+>
+---
+
 # westeros-foodflow Master Checkpoint
 
 **Checkpoint ID:** `FOODFLOW-2026-09-26-PHASE3-SQL-BRONZE-COMPLETE`  

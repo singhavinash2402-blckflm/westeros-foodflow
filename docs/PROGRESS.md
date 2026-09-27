@@ -1,4 +1,4 @@
-﻿# FoodFlow Progress Tracker
+﻿# westeros-foodflow Progress Tracker
 
 ## Phase 0 — Project Foundation
 
@@ -357,3 +357,35 @@ For SQL/JDBC: `_source_system=azure_sql`, `_source_file=NULL`, `_batch_id=stage3
 ## Next
 
 **Bronze → Silver.** First define source precedence/canonicalization for the mixed-source `restaurants` Bronze state.
+
+
+---
+
+## Phase 3 — Relational SQL — 2026-09-26 architecture checkpoint
+
+### Completed
+
+- [x] 3A — Azure SQL foundation and normalized 10-table schema
+- [x] 3B — Stage A relational dataset
+- [x] 3C — Databricks/JDBC connectivity
+- [x] 3D — SQL → Landing → Bronze
+- [x] Architecture review after 3E failure
+- [x] Landing → Bronze → Silver → Gold architecture locked
+- [x] Silver Decisions 6–22 locked
+- [x] Gold Decisions 23–33 locked
+- [x] Control Plane/Orchestration Decisions 34–43 locked
+
+### Current
+
+- [ ] 3E — Bronze → Silver implementation and validation
+
+### Future
+
+- [ ] 3F — deterministic Stage A2 scaling (~5K)
+- [ ] 3G — AI-assisted Stage B scaling (~15K)
+- [ ] 3H — ADF introduction
+- [ ] 3I — large-scale workload (~250K orders)
+
+**Resume checkpoint:** `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED`
+
+Do not repeat 3A–3D. Do not begin ADF design before the planned ADF learning stage.
