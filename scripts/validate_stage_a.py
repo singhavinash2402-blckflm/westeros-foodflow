@@ -101,7 +101,8 @@ try:
 
     for name, sql in checks.items():
         cursor.execute(sql)
-        result = cursor.fetchone()[0]
+        row = cursor.fetchone()
+        result = row[0] if row is not None else 0
         status = "PASS" if result == 0 else "FAIL"
         print(f"{name}: {result} [{status}]")
 
