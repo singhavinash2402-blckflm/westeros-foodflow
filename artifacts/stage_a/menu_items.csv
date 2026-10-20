@@ -1,0 +1,79 @@
+restaurant_id,item_name,category,description,price,is_available,created_at,updated_at
+REST-SHJ-001,Paneer Tikka 1,North Indian,Signature North Indian item at Sharjah Kitchen 01,497.21,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Dal Makhani 2,North Indian,Signature North Indian item at Sharjah Kitchen 01,538.13,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Butter Chicken 3,North Indian,Signature North Indian item at Sharjah Kitchen 01,485.72,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Jeera Rice 4,North Indian,Signature North Indian item at Sharjah Kitchen 01,219.6,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Paneer Tikka 5,North Indian,Signature North Indian item at Sharjah Kitchen 01,141.38,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Dal Makhani 6,North Indian,Signature North Indian item at Sharjah Kitchen 01,643.89,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-001,Butter Chicken 7,North Indian,Signature North Indian item at Sharjah Kitchen 01,550.41,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Masala Dosa 1,South Indian,Signature South Indian item at Delhi Kitchen 02,556.08,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Idli Sambar 2,South Indian,Signature South Indian item at Delhi Kitchen 02,319.2,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Vada 3,South Indian,Signature South Indian item at Delhi Kitchen 02,405.35,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Lemon Rice 4,South Indian,Signature South Indian item at Delhi Kitchen 02,312.0,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Masala Dosa 5,South Indian,Signature South Indian item at Delhi Kitchen 02,188.73,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Idli Sambar 6,South Indian,Signature South Indian item at Delhi Kitchen 02,210.42,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-002,Vada 7,South Indian,Signature South Indian item at Delhi Kitchen 02,156.27,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Hakka Noodles 1,Chinese,Signature Chinese item at Bengaluru Kitchen 03,90.43,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Fried Rice 2,Chinese,Signature Chinese item at Bengaluru Kitchen 03,176.88,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Manchurian 3,Chinese,Signature Chinese item at Bengaluru Kitchen 03,454.77,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Chilli Paneer 4,Chinese,Signature Chinese item at Bengaluru Kitchen 03,457.76,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Hakka Noodles 5,Chinese,Signature Chinese item at Bengaluru Kitchen 03,136.43,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Fried Rice 6,Chinese,Signature Chinese item at Bengaluru Kitchen 03,580.12,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Manchurian 7,Chinese,Signature Chinese item at Bengaluru Kitchen 03,374.11,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-003,Chilli Paneer 8,Chinese,Signature Chinese item at Bengaluru Kitchen 03,241.76,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Margherita Pizza 1,Italian,Signature Italian item at Mumbai Kitchen 04,190.64,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Pasta Alfredo 2,Italian,Signature Italian item at Mumbai Kitchen 04,316.52,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Lasagna 3,Italian,Signature Italian item at Mumbai Kitchen 04,148.61,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Garlic Bread 4,Italian,Signature Italian item at Mumbai Kitchen 04,258.76,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Margherita Pizza 5,Italian,Signature Italian item at Mumbai Kitchen 04,507.78,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Pasta Alfredo 6,Italian,Signature Italian item at Mumbai Kitchen 04,569.05,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-004,Lasagna 7,Italian,Signature Italian item at Mumbai Kitchen 04,586.59,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Grilled Sandwich 1,Continental,Signature Continental item at Hyderabad Kitchen 05,510.63,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Pasta Bowl 2,Continental,Signature Continental item at Hyderabad Kitchen 05,127.21,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Veg Burger 3,Continental,Signature Continental item at Hyderabad Kitchen 05,477.52,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Chicken Burger 4,Continental,Signature Continental item at Hyderabad Kitchen 05,197.97,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Grilled Sandwich 5,Continental,Signature Continental item at Hyderabad Kitchen 05,619.75,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Pasta Bowl 6,Continental,Signature Continental item at Hyderabad Kitchen 05,304.13,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-005,Veg Burger 7,Continental,Signature Continental item at Hyderabad Kitchen 05,617.09,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Chicken Korma 1,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,445.25,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Seekh Kebab 2,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,255.78,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Biryani 3,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,408.2,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Roomali Roti 4,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,489.35,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Chicken Korma 5,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,108.01,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Seekh Kebab 6,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,213.8,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Biryani 7,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,555.79,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Roomali Roti 8,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,147.04,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Chicken Korma 9,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,191.9,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-SHJ-006,Seekh Kebab 10,Mughlai,Signature Mughlai item at Sharjah Kitchen 06,370.82,False,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Chicken Biryani 1,Biryani,Signature Biryani item at Delhi Kitchen 07,501.53,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Mutton Biryani 2,Biryani,Signature Biryani item at Delhi Kitchen 07,304.26,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Veg Biryani 3,Biryani,Signature Biryani item at Delhi Kitchen 07,170.71,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Raita 4,Biryani,Signature Biryani item at Delhi Kitchen 07,217.39,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Chicken Biryani 5,Biryani,Signature Biryani item at Delhi Kitchen 07,259.13,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Mutton Biryani 6,Biryani,Signature Biryani item at Delhi Kitchen 07,224.95,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Veg Biryani 7,Biryani,Signature Biryani item at Delhi Kitchen 07,272.6,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-DEL-007,Raita 8,Biryani,Signature Biryani item at Delhi Kitchen 07,574.62,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Pav Bhaji 1,Street Food,Signature Street Food item at Bengaluru Kitchen 08,411.8,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Chole Bhature 2,Street Food,Signature Street Food item at Bengaluru Kitchen 08,378.89,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Samosa 3,Street Food,Signature Street Food item at Bengaluru Kitchen 08,524.05,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Aloo Tikki 4,Street Food,Signature Street Food item at Bengaluru Kitchen 08,591.13,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Pav Bhaji 5,Street Food,Signature Street Food item at Bengaluru Kitchen 08,638.92,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Chole Bhature 6,Street Food,Signature Street Food item at Bengaluru Kitchen 08,227.42,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Samosa 7,Street Food,Signature Street Food item at Bengaluru Kitchen 08,324.73,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-BLR-008,Aloo Tikki 8,Street Food,Signature Street Food item at Bengaluru Kitchen 08,189.69,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Cold Coffee 1,Cafe,Signature Cafe item at Mumbai Kitchen 09,285.43,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Cappuccino 2,Cafe,Signature Cafe item at Mumbai Kitchen 09,523.9,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Club Sandwich 3,Cafe,Signature Cafe item at Mumbai Kitchen 09,395.31,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Brownie 4,Cafe,Signature Cafe item at Mumbai Kitchen 09,591.74,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Cold Coffee 5,Cafe,Signature Cafe item at Mumbai Kitchen 09,604.99,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Cappuccino 6,Cafe,Signature Cafe item at Mumbai Kitchen 09,513.33,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Club Sandwich 7,Cafe,Signature Cafe item at Mumbai Kitchen 09,474.2,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Brownie 8,Cafe,Signature Cafe item at Mumbai Kitchen 09,510.63,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-MUM-009,Cold Coffee 9,Cafe,Signature Cafe item at Mumbai Kitchen 09,409.99,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Thai Curry 1,Asian,Signature Asian item at Hyderabad Kitchen 10,90.44,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Ramen 2,Asian,Signature Asian item at Hyderabad Kitchen 10,95.1,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Sushi Roll 3,Asian,Signature Asian item at Hyderabad Kitchen 10,245.79,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Teriyaki Bowl 4,Asian,Signature Asian item at Hyderabad Kitchen 10,250.28,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Thai Curry 5,Asian,Signature Asian item at Hyderabad Kitchen 10,490.13,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Ramen 6,Asian,Signature Asian item at Hyderabad Kitchen 10,638.03,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800
+REST-HYD-010,Sushi Roll 7,Asian,Signature Asian item at Hyderabad Kitchen 10,557.04,True,2026-09-26 02:20:02.134800,2026-09-26 02:20:02.134800

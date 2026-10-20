@@ -195,3 +195,24 @@ AI is used to accelerate repetitive work only after the underlying engineering c
 - [ ] Operational data-engineering agent
 - [ ] Agent for pipeline/log/DQ diagnosis
 - [ ] AI-generated remediation recommendations
+
+
+---
+
+# Phase 3A Learning Sequence Addendum — 2026-09-26
+
+```text
+Stage A: manual/deterministic small process
+        ↓
+Bronze → Silver understanding and validation
+        ↓
+Stage A2: deterministic ~5K scaling
+        ↓
+Stage B: AI-assisted ~15K scaling
+        ↓
+ADF/orchestration
+        ↓
+250K relational workload
+```
+
+The project will not use AI-assisted generation as a substitute for understanding the small deterministic process.

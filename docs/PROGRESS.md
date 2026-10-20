@@ -1,4 +1,4 @@
-﻿# FoodFlow Progress Tracker
+﻿# westeros-foodflow Progress Tracker
 
 ## Phase 0 — Project Foundation
 
@@ -304,3 +304,88 @@ Gold is recomputed from Silver because it represents derived aggregate state rat
 - [ ] Pipeline monitoring agent
 - [ ] Delta history/log analysis agent
 - [ ] Automated diagnosis/recommendation workflow
+
+
+---
+
+# Phase 3A — SQL → Bronze Completion Addendum — 2026-09-26
+
+## Completed
+
+- [x] Azure SQL environment
+- [x] Ten-table normalized schema
+- [x] Schema validation: tables, columns/types, PKs, FKs, indexes, constraints
+- [x] Stage A deterministic relational dataset
+- [x] Relationship/business validation
+- [x] Local Python/ODBC connectivity
+- [x] Databricks JDBC connectivity
+- [x] SQL source schema discovery
+- [x] SQL → Bronze for all ten tables
+- [x] Standard SQL Bronze metadata
+- [x] Restaurant historical-source preservation
+- [x] Source/Bronze row-count validation
+
+## SQL → Bronze batch
+
+`stage3a_sql_full_20260926`
+
+| Table | SQL rows | Bronze SQL rows |
+|---|---:|---:|
+| customers | 100 | 100 |
+| restaurants | 10 | 10 SQL-originated rows; 9 historical CSV-only rows retained |
+| menu_items | 78 | 78 |
+| orders | 500 | 500 |
+| order_items | 1,515 | 1,515 |
+| payments | 500 | 500 |
+| delivery_partners | 20 | 20 |
+| order_status_history | 2,808 | 2,808 |
+| restaurant_reviews | 66 | 66 |
+| delivery_partner_reviews | 23 | 23 |
+
+## Locked metadata
+
+```text
+_ingested_at
+_ingestion_date
+_source_system
+_source_file
+_batch_id
+```
+
+For SQL/JDBC: `_source_system=azure_sql`, `_source_file=NULL`, `_batch_id=stage3a_sql_full_20260926`.
+
+## Next
+
+**Bronze → Silver.** First define source precedence/canonicalization for the mixed-source `restaurants` Bronze state.
+
+
+---
+
+## Phase 3 — Relational SQL — 2026-09-26 architecture checkpoint
+
+### Completed
+
+- [x] 3A — Azure SQL foundation and normalized 10-table schema
+- [x] 3B — Stage A relational dataset
+- [x] 3C — Databricks/JDBC connectivity
+- [x] 3D — SQL → Landing → Bronze
+- [x] Architecture review after 3E failure
+- [x] Landing → Bronze → Silver → Gold architecture locked
+- [x] Silver Decisions 6–22 locked
+- [x] Gold Decisions 23–33 locked
+- [x] Control Plane/Orchestration Decisions 34–43 locked
+
+### Current
+
+- [ ] 3E — Bronze → Silver implementation and validation
+
+### Future
+
+- [ ] 3F — deterministic Stage A2 scaling (~5K)
+- [ ] 3G — AI-assisted Stage B scaling (~15K)
+- [ ] 3H — ADF introduction
+- [ ] 3I — large-scale workload (~250K orders)
+
+**Resume checkpoint:** `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED`
+
+Do not repeat 3A–3D. Do not begin ADF design before the planned ADF learning stage.

@@ -1,0 +1,6 @@
+scenario_id,table_name,scenario,description
+DQ-001,orders,DELIVERY_WITH_NULL_PARTNER,DELIVERY order without delivery_partner_id
+DQ-002,orders,NON_DELIVERY_WITH_PARTNER,DINE_IN/TAKE_AWAY order with delivery_partner_id
+DQ-003,restaurant_reviews,RATING_OUTSIDE_RANGE,Rating outside 1-5; do not load into constrained production table
+DQ-004,order_items,NEGATIVE_QUANTITY,Negative quantity; do not load into constrained production table
+DQ-005,orders,UNKNOWN_RESTAURANT_ID,Unknown restaurant business key; FK rejection scenario

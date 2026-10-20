@@ -1,4 +1,4 @@
-# FoodFlow Data Dictionary
+# westeros-foodflow Data Dictionary
 
 ## Purpose
 
@@ -584,3 +584,55 @@ Update this file in the same feature/phase where the schema changes.
 Commit the documentation alongside the implementation.
 
 The data dictionary should remain aligned with the actual FoodFlow implementation.
+
+---
+
+# Phase 3A Data Contract Addendum — 2026-09-26
+
+## Standard Bronze metadata
+
+| Column | Meaning |
+|---|---|
+| `_ingested_at` | Timestamp when the row entered Bronze |
+| `_ingestion_date` | Calendar date of Bronze ingestion |
+| `_source_system` | Broad source system such as `azure_sql` |
+| `_source_file` | File lineage when source is file-based; NULL for JDBC |
+| `_batch_id` | Ingestion run/batch identifier |
+
+## Current SQL batch
+
+`stage3a_sql_full_20260926`
+
+## Stage A source counts
+
+10 restaurants, 100 customers, 78 menu items, 500 orders, 1,515 order items, 500 payments, 20 delivery partners, 2,808 status-history rows, 66 restaurant reviews, and 23 delivery-partner reviews.
+
+## Watermark contract
+
+```sql
+SELECT *
+FROM dbo.orders
+WHERE updated_at > @last_watermark
+  AND updated_at <= @current_watermark;
+```
+
+Lower boundary is exclusive; upper boundary is inclusive. The pattern captures inserts/updates represented by `updated_at`, not hard deletes.
+
+
+---
+
+## 2026-09-26 — Multi-source Silver contract transition
+
+The original restaurant Silver examples in this document describe the earlier single-source CSV learning exercise and are retained as historical implementation context.
+
+The authoritative Phase 3 multi-source Silver contract is now defined by `FOODFLOW-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED` and Silver Decisions S-06 through S-22.
+
+During 3E implementation, table-level canonical schemas, business keys, record identity, DQ fields, source provenance, and current-state/event behavior will be documented here as they become executable. This prevents the data dictionary from claiming a final Silver physical schema before 3E is implemented.
+
+Current authoritative relationship:
+
+```text
+Landing → Bronze → Silver → Gold
+```
+
+Bronze preserves source evidence. Silver defines canonical business state. Gold defines analytical consumption grain.

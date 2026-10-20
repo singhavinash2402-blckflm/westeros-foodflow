@@ -1,8 +1,8 @@
-# FoodFlow — Project Plan
+# westeros-foodflow — Project Plan
 
 ## 1. Project Overview
 
-FoodFlow is a hands-on, end-to-end data engineering learning project designed to simulate a production-style modern data platform.
+westeros-foodflow is a hands-on, end-to-end data engineering learning project designed to simulate a production-style modern data platform.
 
 The project will progressively integrate batch ingestion, databases, cloud storage, distributed processing, Delta Lake, orchestration, streaming, data quality, security, testing, CI/CD, analytics, and AI-assisted data engineering.
 
@@ -12,7 +12,7 @@ The goal is not only to build the platform, but to understand the engineering co
 
 ## 2. Primary Learning Objectives
 
-FoodFlow will provide practical experience with:
+westeros-foodflow will provide practical experience with:
 
 - Python
 - SQL
@@ -115,7 +115,7 @@ Cross-cutting capabilities:
 
 ## 4. Development Strategy
 
-FoodFlow will follow a progressive learning approach:
+westeros-foodflow will follow a progressive learning approach:
 
 1. Learn the concept.
 2. Implement a small example manually.
@@ -311,3 +311,92 @@ Azure ADLS Gen2 integration is intentionally deferred until the appropriate Azur
 * Documentation assistants
 * PySpark assistants
 * Operational AI agents
+
+
+---
+
+# Phase 3A Current-State Addendum — 2026-09-26
+
+This addendum supersedes any earlier Phase 3 text that says Azure SQL schema validation is the immediate next task. SQL schema, Stage A data, validation, JDBC, and SQL → Bronze are now complete.
+
+## Current sequence
+
+```text
+Azure SQL schema
+   ↓
+Stage A data
+   ↓
+Relationship/business validation
+   ↓
+JDBC
+   ↓
+SQL → Bronze   [COMPLETE]
+   ↓
+Bronze → Silver [NEXT]
+   ↓
+Stage A2 — deterministic ~5K
+   ↓
+Stage B — AI-assisted ~15K
+   ↓
+ADF
+   ↓
+250K-order workload
+```
+
+## Locked SQL → Bronze rules
+
+- Standard Bronze metadata: `_ingested_at`, `_ingestion_date`, `_source_system`, `_source_file`, `_batch_id`.
+- SQL/JDBC rows use `_source_system = azure_sql`.
+- SQL/JDBC rows use `_source_file = NULL`; never invent file lineage for a database source.
+- Current SQL batch: `stage3a_sql_full_20260926`.
+- Existing Bronze `restaurants` history is preserved. SQL reconciliation uses explicit `restaurant_id` matching rather than overwrite.
+- Existing historical `_source_file` lineage on restaurant records is preserved.
+- Historical CSV-only restaurant rows are not relabeled as Azure SQL.
+- First-load SQL tables require an explicit `spark.catalog.tableExists()` safety check before writing.
+- Source and Bronze row counts are compared after each full load.
+- Databricks `errorifexists` is not used as the safety mechanism because it was unsupported in this environment.
+
+## Current Stage A counts
+
+- restaurants: 10
+- customers: 100
+- menu_items: 78
+- orders: 500
+- order_items: 1,515
+- payments: 500
+- delivery_partners: 20
+- order_status_history: 2,808
+- restaurant_reviews: 66
+- delivery_partner_reviews: 23
+
+## Bronze restaurants result
+
+The pre-existing Bronze `restaurants` table contained 9 historical CSV-only rows. Current Azure SQL Stage A contributes 10 rows. One business key overlaps (`REST-SHJ-001`). The final Bronze state contains 19 restaurant rows: 9 historical CSV-only + 10 SQL-originated.
+
+## JDBC/serverless reliability rule
+
+Azure SQL General Purpose Serverless may auto-pause/resume and produce transient connection failures during resume. Databricks Free Edition public egress IPs can also change and cause firewall authorization failures. Troubleshooting must distinguish transient availability, firewall/IP, authentication, and query/schema errors. Do not enable broad Azure-services access as a shortcut. Add explicit JDBC retry/resiliency properties to the maintained ingestion implementation.
+
+## Next task
+
+Bronze → Silver. The canonical/source-resolution contract is already locked by the 2026-09-26 architecture checkpoint. Implementation now translates those locked rules into executable Silver processing without silently destroying historical lineage.
+
+
+## 2026-09-26 authoritative Phase 3 state
+
+Phase 3 is complete through **3D — SQL → Landing → Bronze**. The current implementation point is **3E — Bronze → Silver**.
+
+The first 3E implementation exposed source metadata/provenance contamination in mixed-source Bronze data. The project deliberately paused implementation and completed an architecture review rather than applying a narrow patch.
+
+The resulting architecture is locked as:
+
+```text
+Landing → Bronze → Silver → Gold
+Control / Observability / Orchestration
+```
+
+Silver Decisions 6–22, Gold Decisions 23–33, and Control Plane/Orchestration Decisions 34–43 are authoritative. No redesign is required before 3E implementation.
+
+### 3E resume rule
+
+Implement the locked Silver contract against the existing 3D Bronze data. Reopen an architecture decision only if concrete implementation evidence demonstrates a defect or contradiction.

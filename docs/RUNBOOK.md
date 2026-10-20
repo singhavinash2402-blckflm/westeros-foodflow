@@ -1,4 +1,4 @@
-# FoodFlow — Runbook
+# westeros-foodflow — Runbook
 
 ## 1. Purpose
 
@@ -332,3 +332,79 @@ The following sections will be added as FoodFlow grows:
 * Reprocessing
 * Performance troubleshooting
 * CI/CD deployment failures
+
+
+---
+
+# Phase 3A SQL → Bronze Runbook Addendum — 2026-09-26
+
+## SQL Bronze metadata
+
+```text
+_source_system = azure_sql
+_source_file   = NULL
+_batch_id      = stage3a_sql_full_20260926
+```
+
+## First-load safety
+
+1. Check `spark.catalog.tableExists(bronze_table)`.
+2. Stop if the table exists and the operation is intended as a first load.
+3. Read the SQL source through JDBC.
+4. Compare source count to Bronze count after writing.
+
+Do not use unsupported `errorifexists` as the guard.
+
+## Existing restaurants Bronze
+
+Do not overwrite. Use explicit `restaurant_id` reconciliation. Preserve historical `_source_file` lineage. Confirm that SQL-originated rows carry SQL metadata while historical CSV-only rows remain historical.
+
+## JDBC troubleshooting
+
+- Firewall/IP rejection: identify the current Databricks egress IP and authorize it explicitly.
+- Serverless database-unavailable/transient error: allow auto-resume time and retry; distinguish from query/schema errors.
+- Authentication failure: verify credentials outside notebooks/Git.
+- Query/schema failure: investigate only after connectivity is established.
+
+Do not enable broad Azure-services access as a troubleshooting shortcut.
+
+## Bronze → Silver gate
+
+Before Silver code, define source precedence, canonicalization, lineage preservation, and relationship/data-quality rules for mixed-source Bronze tables.
+
+
+---
+
+## 2026-09-26 — Current Phase 3 resume point
+
+### Phase 3 state
+
+```text
+3A SQL Foundation       COMPLETE
+3B Stage A              COMPLETE
+3C JDBC                 COMPLETE
+3D SQL → Landing→Bronze COMPLETE
+3E Bronze → Silver      CURRENT
+```
+
+### 3E operating rule
+
+The Silver architecture is already locked. Do not redefine source precedence, canonicalization, DQ, relationship handling, replay semantics, or layer boundaries during implementation unless concrete evidence proves a defect.
+
+The implementation should proceed table-by-table using the locked Silver decisions and validate:
+
+- canonical identity
+- deduplication
+- source conflict resolution
+- business/relationship/schema DQ
+- current-state vs event semantics
+- late-arriving records
+- idempotent replay
+- lineage
+- processing metrics
+
+Reference checkpoint: `docs/project/checkpoints/MASTER-2026-09-26-PHASE3-3E-ARCHITECTURE-LOCKED.md`.
+
+### Superseded 3E preparation wording
+
+Earlier runbook text that says Silver source precedence/canonicalization must first be defined is superseded. Those architecture rules were locked on 2026-09-26; the remaining task is implementation and validation.
