@@ -11,7 +11,7 @@ jdbc_url = (
 
 connection_properties = {
     "user": "<Your_username>",
-    "password": "Avika@2402word",
+    "password": "<Your_password>",
     "driver": "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 }
 test_df = (
